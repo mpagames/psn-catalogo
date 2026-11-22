@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PSN — Catálogo</title>
+<meta name="description" content="Letrinhas personalizadas, caixetas e bichinhos impressos em 3D. Faça seu pedido pelo WhatsApp.">
+<meta name="theme-color" content="#2E1A47">
+<meta property="og:title" content="PSN — Catálogo">
+<meta property="og:description" content="Peças impressas em 3D, camada por camada. Escolha e peça pelo WhatsApp.">
+<meta property="og:image" content="logo.png">
+<link rel="icon" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<style>
+:root{--lado:clamp(14px,3.2vw,56px);--roxo:#6B3FA0;--roxo2:#8A5FC4;--escuro:#2E1A47;--verde:#2FA84F;--creme:#FFF6E5;--lilas:#E4D9F2;--suave:#6d6280;--borda:#eadff5;--raio:18px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--creme);color:var(--escuro);-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+img{max-width:100%;display:block}
+
+/* topo */
+header{position:sticky;top:0;z-index:30;background:var(--escuro);box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.topo{margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px var(--lado);padding-top:max(10px,env(safe-area-inset-top))}
+.logo{height:52px;background:var(--creme);border-radius:12px;padding:3px 9px}
+.busca{flex:1;display:flex;align-items:center;background:#fff;border-radius:999px;padding:0 14px;max-width:460px;margin-left:auto}
+.busca input{border:0;outline:0;padding:11px 8px;width:100%;background:transparent;min-width:0}
+.btn-carrinho{background:var(--verde);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:700;display:flex;gap:8px;align-items:center;white-space:nowrap}
+.btn-carrinho b{background:#fff;color:var(--verde);border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-size:.85rem;padding:0 6px}
+@media(max-width:640px){.topo{flex-wrap:wrap;row-gap:8px;padding-bottom:10px}.logo{height:42px}.busca{order:3;flex-basis:100%;max-width:none;margin:0}.btn-carrinho{margin-left:auto}.btn-carrinho span{display:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;margin:0 auto;padding:34px var(--lado) 18px}
+.hero h1{font-size:clamp(1.9rem,5.5vw,3rem);line-height:1.05;margin:0 0 10px;letter-spacing:-.5px}
+.hero h1 .a{color:var(--roxo)} .hero h1 .b{color:var(--verde)} .hero h1 .c{color:var(--roxo2)}
+.hero p{max-width:560px;color:var(--suave);font-size:1.05rem;margin:0}
+.bolha{position:absolute;border-radius:50%;z-index:-1}
+/* formas orgânicas no fundo da página (ficam atrás de tudo) */
+body{position:relative;z-index:0;overflow-x:hidden}
+.formas{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.forma{position:absolute;display:block;height:auto}
+@media(max-width:640px){.forma{transform:scale(.7)}}
+.aviso-teste{margin:0 auto 6px;padding:0 var(--lado)}
+.aviso-teste div{background:#FFF1BF;color:#5b4300;border-radius:12px;padding:10px 14px;font-size:.9rem}
+
+/* filtros */
+.secao{margin:0 auto;padding:10px var(--lado) 40px}
+.secao h2{font-size:1.5rem;margin:8px 0 2px}
+.secao .sub{color:var(--suave);margin:0 0 14px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{border:2px solid var(--borda);background:#fff;border-radius:999px;padding:8px 16px;font-weight:700;white-space:nowrap;color:var(--escuro)}
+.chip.ativo{background:var(--roxo);border-color:var(--roxo);color:#fff}
+.busca-movel{display:none;background:#fff;border-radius:999px;padding:0 14px;margin-bottom:10px;align-items:center;border:2px solid var(--borda)}
+.busca-movel input{border:0;outline:0;padding:11px 8px;width:100%;background:transparent}
+@media(max-width:640px){.busca-movel{display:flex}}
+
+/* cards */
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
+@media(max-width:620px){.grade{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:var(--raio);box-shadow:0 4px 18px rgba(46,26,71,.08);overflow:hidden;display:flex;flex-direction:column}
+.galeria{position:relative;aspect-ratio:1/1;background:#f3eefa}
+.galeria img{width:100%;height:100%;object-fit:cover}
+.galeria.retrato{aspect-ratio:3/4;background:#FCF6EE}
+.galeria.retrato img{object-fit:contain;position:absolute;inset:0}
+/* no celular a foto fica um pouco mais baixa, para a foto e as cores caberem juntas na tela */
+@media(max-width:640px){.galeria.retrato{aspect-ratio:10/9}.galeria.retrato img{object-fit:cover;object-position:center 52%}.galeria.retrato img.inteira{object-fit:contain}}
+/* banner do topo (capas passando sozinhas) */
+.banner{position:relative;margin:4px var(--lado) 22px;border-radius:24px;overflow:hidden;box-shadow:0 6px 24px rgba(46,26,71,.10)}
+.banner .trilho{display:flex;transition:transform .6s ease}
+.banner .slide{flex:0 0 100%;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:clamp(14px,3vw,40px);padding:clamp(16px,3vw,36px);border:0;text-align:left;cursor:pointer;color:var(--escuro)}
+.banner .txt h2{font-size:clamp(1.5rem,3.4vw,2.6rem);line-height:1.05;margin:0 0 10px;color:var(--roxo)}
+.banner .txt p{margin:0 0 16px;color:#4d4060;font-size:clamp(.95rem,1.4vw,1.15rem)}
+.banner .txt span{display:inline-block;background:var(--roxo);color:#fff;font-weight:800;border-radius:999px;padding:10px 18px}
+.banner .foto{aspect-ratio:3/2;border-radius:18px;overflow:hidden;background:#FCF3EA}
+.banner .foto img{width:100%;height:100%;object-fit:cover;object-position:center 55%}
+.banner .pontos-b{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:7px}
+.banner .pontos-b button{width:9px;height:9px;border-radius:50%;border:0;padding:0;background:rgba(46,26,71,.25)}
+.banner .pontos-b button.on{background:var(--roxo);width:22px;border-radius:9px}
+@media(max-width:640px){.banner .slide{grid-template-columns:1fr;padding:12px 12px 30px}.banner .foto{order:-1}.banner .txt p{margin-bottom:12px}}
+/* atalhos com capa (topo) */
+.atalhos{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,calc((100% - 56px) / 5));gap:14px;overflow-x:auto;padding:4px var(--lado) 18px;scroll-snap-type:x mandatory;scroll-padding-inline:var(--lado);scrollbar-width:none;margin-top:-4px}
+.atalhos::-webkit-scrollbar{display:none}
+.atalho{scroll-snap-align:start;border:0;padding:0;background:#fff;border-radius:var(--raio);overflow:hidden;text-align:left;box-shadow:0 4px 18px rgba(46,26,71,.08);display:flex;flex-direction:column;outline:3px solid transparent;transition:outline-color .15s, transform .15s}
+.atalho:hover{transform:translateY(-2px)}
+.atalho.on{outline-color:var(--roxo)}
+.atalho .img{aspect-ratio:4/3;background:#FCF3EA;overflow:hidden}
+.atalho img{width:100%;height:100%;object-fit:cover;object-position:center 55%}
+.atalho .vazio{width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(135deg,#efe6f8,#fcf3ea);color:var(--roxo);font-weight:800;letter-spacing:.5px}
+.atalho b{padding:12px 14px 2px;font-size:1.02rem;color:var(--escuro)}
+.atalho small{padding:0 14px 12px;color:var(--suave);font-size:.82rem}
+@media(max-width:640px){.atalhos{grid-auto-columns:72%}}
+/* capa da seção / categoria */
+.capa{margin:2px 0 16px;border-radius:var(--raio);overflow:hidden;background:#FDF3E8;height:clamp(170px,30vw,420px);box-shadow:0 4px 18px rgba(46,26,71,.08)}
+.capa img{width:100%;height:100%;object-fit:cover;object-position:center 55%}
+.capa.inteira{background:#FCF3EA}
+.capa.inteira img{object-fit:contain}
+.capa[hidden]{display:none}
+.galeria .seta{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.88);font-size:1.3rem;font-weight:800;color:var(--escuro);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.galeria .ant{left:10px}.galeria .prox{right:10px}
+.galeria .pontos{position:absolute;bottom:10px;left:0;right:0;display:flex;gap:5px;justify-content:center}
+.galeria .pontos i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.6)}
+.galeria .pontos i.on{background:#fff;width:18px;border-radius:4px}
+.galeria .pontos .cont{background:rgba(46,26,71,.6);color:#fff;font-size:.75rem;font-weight:700;border-radius:999px;padding:2px 9px}
+.galeria .tag{position:absolute;top:12px;left:12px;background:var(--roxo);color:#fff;font-size:.75rem;font-weight:800;border-radius:999px;padding:4px 10px}
+.corpo{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.corpo h3{margin:0;font-size:1.15rem}
+.corpo .desc{margin:0;color:var(--suave);font-size:.92rem;line-height:1.4}
+.preco{font-size:1.35rem;font-weight:800;color:var(--roxo)}
+.preco small{font-size:.85rem;font-weight:600;color:var(--suave)}
+.op-nome{font-size:.8rem;font-weight:700;color:var(--suave);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.op-nome b{color:var(--escuro);text-transform:none;letter-spacing:0;font-size:.9rem}
+.valores{display:flex;flex-wrap:wrap;gap:6px}
+.val{border:2px solid var(--borda);background:#fff;border-radius:999px;padding:6px 12px;font-size:.88rem;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.val.on{border-color:var(--roxo);background:#f4eefc}
+.val .bol{width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.val.cor{padding:4px;border-radius:50%}
+.val.cor .bol{width:26px;height:26px}
+.tecla{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;font-weight:900;font-size:1rem;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.12),0 2px 0 rgba(0,0,0,.12)}
+.val.combo{padding:4px;border-radius:12px}
+.val.combo .tecla{width:34px;height:34px}
+.nome-in{width:100%;border:2px solid var(--borda);border-radius:12px;padding:11px 12px;font-size:1.05rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;outline:0}
+.nome-in:focus{border-color:var(--roxo2)}
+.previa{display:flex;flex-wrap:wrap;gap:5px;min-height:38px;align-items:center;padding:8px;background:#faf7fd;border-radius:12px}
+.previa .tecla{width:30px;height:30px;font-size:1.05rem}
+.dica{flex-basis:100%;font-size:.82rem;color:var(--suave);margin-top:4px}
+.link{background:none;border:0;color:var(--roxo);font-weight:700;text-decoration:underline;padding:0;font-size:.82rem}
+.cx{border:0;display:inline-grid;place-items:center;padding:5px;border-radius:10px;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.12),0 2px 0 rgba(0,0,0,.08)}
+.previa .vazio{color:#b9abc9;font-size:.9rem}
+.rodape-card{display:flex;gap:10px;align-items:center;margin-top:auto;padding-top:4px}
+.qtd{display:flex;align-items:center;border:2px solid var(--borda);border-radius:999px;overflow:hidden}
+.qtd button{width:38px;height:40px;border:0;background:transparent;font-size:1.3rem;font-weight:800;color:var(--roxo)}
+.qtd span{min-width:28px;text-align:center;font-weight:800}
+.add{flex:1;border:0;border-radius:999px;background:var(--roxo);color:#fff;font-weight:800;padding:12px 14px;font-size:.98rem}
+.add:active{transform:scale(.98)}
+.add.ok{background:var(--verde)}
+
+/* carrinho */
+.fundo{position:fixed;inset:0;background:rgba(46,26,71,.45);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.fundo.on{opacity:1;pointer-events:auto}
+.gaveta{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--creme);z-index:50;transform:translateX(105%);transition:transform .25s;display:flex;flex-direction:column}
+.gaveta.on{transform:none}
+.gaveta .cab{display:flex;align-items:center;justify-content:space-between;padding:16px;padding-top:max(16px,env(safe-area-inset-top));background:var(--escuro);color:#fff}
+.gaveta .cab h2{margin:0;font-size:1.2rem}
+.fechar{background:transparent;border:0;color:#fff;font-size:1.6rem;line-height:1}
+.itens{flex:1;overflow:auto;padding:12px 16px}
+.item{display:flex;gap:12px;background:#fff;border-radius:14px;padding:10px;margin-bottom:10px;align-items:center}
+.item img{width:62px;height:62px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.item .info{flex:1;min-width:0}
+.item .info b{display:block}
+.item .info small{color:var(--suave);display:block;line-height:1.3}
+.item .lado{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.item .qtd button{width:30px;height:30px;font-size:1.1rem}
+.item .remover{background:transparent;border:0;color:#C62828;font-size:.8rem;font-weight:700;padding:0}
+.vazio-carr{text-align:center;color:var(--suave);padding:40px 10px}
+.fim{padding:14px 16px;padding-bottom:max(14px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--borda)}
+/* carrinho: a gaveta inteira rola (lista + resumo + dados), e o botão de enviar fica sempre visível embaixo */
+#gaveta{overflow-y:auto;-webkit-overflow-scrolling:touch}
+#gaveta .itens{flex:0 0 auto;overflow:visible}
+#gaveta .cab{position:sticky;top:0;z-index:2}
+#gaveta .fim{flex:1 0 auto}
+#gaveta.on .enviar{position:fixed;right:16px;bottom:max(12px,env(safe-area-inset-bottom));width:calc(min(440px,100%) - 32px);z-index:3;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+#gaveta.on .fim{padding-bottom:86px}
+.linha-tot span:last-child,.total span:last-child{white-space:nowrap;padding-left:10px}
+.total{display:flex;justify-content:space-between;font-size:1.2rem;font-weight:800;margin-bottom:10px}
+.campo{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;font-size:.85rem;font-weight:700;color:var(--suave)}
+.campo input,.campo select,.campo textarea{border:2px solid var(--borda);border-radius:10px;padding:9px 10px;font-weight:500;color:var(--escuro);background:#fff;outline:0}
+.campo textarea{resize:vertical;min-height:54px}
+.enviar{width:100%;border:0;border-radius:999px;background:#25D366;color:#fff;font-weight:800;font-size:1.05rem;padding:14px;display:flex;gap:10px;align-items:center;justify-content:center}
+.enviar:disabled{opacity:.5}
+.nota{font-size:.8rem;color:var(--suave);text-align:center;margin:8px 0 0}
+
+/* flutuantes */
+.zap{position:fixed;right:18px;bottom:max(18px,env(safe-area-inset-bottom));width:58px;height:58px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:20}
+.barra-carr{position:fixed;left:12px;right:86px;bottom:max(18px,env(safe-area-inset-bottom));z-index:20;display:none}
+.barra-carr button{white-space:nowrap;width:100%;border:0;border-radius:999px;background:var(--roxo);color:#fff;font-weight:800;padding:15px 18px;display:flex;justify-content:space-between;box-shadow:0 6px 18px rgba(46,26,71,.3)}
+@media(max-width:640px){.barra-carr.on{display:block}}
+#toast{position:fixed;left:50%;top:84px;transform:translate(-50%,-20px);background:var(--escuro);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;opacity:0;transition:.25s;z-index:60;pointer-events:none;max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+/* seções */
+.secoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 14px}
+.aba-sec{border:2px solid var(--borda);background:#fff;border-radius:16px;padding:14px 12px;justify-content:center;min-height:54px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--escuro);font-size:.92rem;text-align:center}
+.aba-sec span{font-size:1.5rem}
+.aba-sec small{font-size:.7rem;font-weight:700;color:var(--suave)}
+.aba-sec.ativa{background:var(--roxo);border-color:var(--roxo);color:#fff}
+.aba-sec.ativa small{color:#e9e1f5}
+@media(max-width:480px){.secoes{grid-template-columns:repeat(3,1fr)}.aba-sec{font-size:.78rem;padding:8px 6px}}
+.preco.consulta{font-size:1.05rem;color:var(--suave)}
+.card.em-breve .corpo{align-items:center;text-align:center;padding:30px 20px}
+/* kits e descontos */
+.promo{background:#E7F6EC;color:#14532d;border-radius:14px;padding:11px 14px;font-size:.92rem;margin-bottom:12px;line-height:1.4}
+.promo-mini{background:#E7F6EC;color:#14532d;border-radius:10px;padding:8px 10px;font-size:.85rem;margin:6px 0 10px}
+.galeria .tag.pix{left:auto;right:12px;background:var(--verde)}
+.galeria .tag.kit{background:var(--verde);font-size:.85rem}
+.kit-lista{margin:0;padding-left:18px;color:var(--escuro);font-weight:600;font-size:.92rem}
+.kit-intro{color:var(--suave);font-size:.92rem;margin:0 0 12px}
+.card.mini{margin-bottom:12px;box-shadow:0 2px 10px rgba(46,26,71,.08)}
+.kit-rot{font-size:.75rem;font-weight:800;color:#fff;background:var(--roxo2);border-radius:999px;padding:3px 10px;align-self:flex-start}
+.linha-tot{display:flex;justify-content:space-between;font-size:.95rem;margin-bottom:4px;gap:10px}
+.verde{color:#1E7B3A!important;font-weight:700}
+.kit-modal{width:min(520px,100%)}
+.kit-inclui{background:#fff;border-radius:12px;padding:10px 12px;font-size:.9rem;margin-bottom:12px}
+.escolhas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.esc-prod{border:2px solid var(--borda);background:#fff;border-radius:12px;padding:4px;display:flex;flex-direction:column;gap:4px;align-items:center;font-size:.78rem;font-weight:700}
+.esc-prod img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px}
+.esc-prod.on{border-color:var(--roxo);background:#f4eefc}
+.esc-prod small{color:var(--roxo);font-weight:800}
+.esc-prod.sem{justify-content:center}
+.mini-foto{border-radius:12px;overflow:hidden;background:#FCF6EE;aspect-ratio:4/3;margin:2px 0 4px}
+.mini-foto img{width:100%;height:100%;object-fit:contain}
+.sem-ico{font-size:1.8rem;aspect-ratio:1/1;display:grid;place-items:center;width:100%}
+.esc-config .card.mini{box-shadow:none;margin:0;background:#faf7fd}
+.esc-config .card.mini .kit-rot{display:none}
+footer{text-align:center;color:var(--suave);padding:20px 16px 110px;font-size:.9rem}
+footer a{color:var(--roxo);font-weight:700}
+</style>
+</head>
+<body>
+<div class="formas" aria-hidden="true"><svg class="forma" style="top:-230px;right:-190px;width:620px" viewBox="-80 -80 160 160"><path fill="#D8C4F4" d="M44.7,-58.6C57.4,-49.9,66.5,-35.6,70.9,-19.8C75.3,-4,75,13.4,67.9,27.4C60.8,41.4,46.8,52.1,31.4,59.6C16,67.1,-0.8,71.4,-17.6,68.6C-34.4,65.8,-51.2,55.9,-61.9,41.5C-72.6,27.1,-77.2,8.2,-73.6,-8.8C-70,-25.8,-58.2,-40.9,-44,-49.7C-29.8,-58.5,-14.9,-61,0.6,-61.8C16.1,-62.6,32,-67.3,44.7,-58.6Z" transform="rotate(0)"/></svg><svg class="forma" style="top:40px;left:-190px;width:340px" viewBox="-80 -80 160 160"><path fill="#BDE8C8" d="M52.3,-61.4C66.6,-50.8,76.1,-33.4,78.3,-15.4C80.5,2.6,75.4,21.2,64.6,34.4C53.8,47.6,37.3,55.4,20.4,61.5C3.5,67.6,-13.8,72,-29.6,67.1C-45.4,62.2,-59.7,48,-67.4,31.1C-75.1,14.2,-76.2,-5.4,-69.6,-21.5C-63,-37.6,-48.7,-50.2,-33.4,-60.4C-18.1,-70.6,-1.8,-78.4,14.4,-77.1C30.6,-75.8,38,-72,52.3,-61.4Z" transform="rotate(-15)"/></svg><svg class="forma" style="top:150px;right:30%;width:230px" viewBox="-80 -80 160 160"><path fill="#F6C6DB" d="M39.2,-48.1C51.9,-38.9,63.6,-26.6,67.2,-12C70.8,2.6,66.4,19.5,56.8,32.2C47.2,44.9,32.4,53.4,16.3,59.3C0.2,65.2,-17.2,68.5,-31.6,62.6C-46,56.7,-57.4,41.6,-63.7,24.9C-70,8.2,-71.2,-10.1,-64.3,-24.5C-57.4,-38.9,-42.4,-49.4,-27.7,-58C-13,-66.6,1.4,-73.3,14.3,-70.6C27.2,-67.9,26.5,-57.3,39.2,-48.1Z" transform="rotate(30)"/></svg><svg class="forma" style="top:560px;left:-210px;width:380px" viewBox="-80 -80 160 160"><path fill="#F3E39C" d="M44.7,-58.6C57.4,-49.9,66.5,-35.6,70.9,-19.8C75.3,-4,75,13.4,67.9,27.4C60.8,41.4,46.8,52.1,31.4,59.6C16,67.1,-0.8,71.4,-17.6,68.6C-34.4,65.8,-51.2,55.9,-61.9,41.5C-72.6,27.1,-77.2,8.2,-73.6,-8.8C-70,-25.8,-58.2,-40.9,-44,-49.7C-29.8,-58.5,-14.9,-61,0.6,-61.8C16.1,-62.6,32,-67.3,44.7,-58.6Z" transform="rotate(110)"/></svg><svg class="forma" style="top:520px;right:-170px;width:300px" viewBox="-80 -80 160 160"><path fill="#D8C4F4" d="M52.3,-61.4C66.6,-50.8,76.1,-33.4,78.3,-15.4C80.5,2.6,75.4,21.2,64.6,34.4C53.8,47.6,37.3,55.4,20.4,61.5C3.5,67.6,-13.8,72,-29.6,67.1C-45.4,62.2,-59.7,48,-67.4,31.1C-75.1,14.2,-76.2,-5.4,-69.6,-21.5C-63,-37.6,-48.7,-50.2,-33.4,-60.4C-18.1,-70.6,-1.8,-78.4,14.4,-77.1C30.6,-75.8,38,-72,52.3,-61.4Z" transform="rotate(200)"/></svg><svg class="forma" style="top:30%;right:-230px;width:440px" viewBox="-80 -80 160 160"><path fill="#BDE8C8" d="M39.2,-48.1C51.9,-38.9,63.6,-26.6,67.2,-12C70.8,2.6,66.4,19.5,56.8,32.2C47.2,44.9,32.4,53.4,16.3,59.3C0.2,65.2,-17.2,68.5,-31.6,62.6C-46,56.7,-57.4,41.6,-63.7,24.9C-70,8.2,-71.2,-10.1,-64.3,-24.5C-57.4,-38.9,-42.4,-49.4,-27.7,-58C-13,-66.6,1.4,-73.3,14.3,-70.6C27.2,-67.9,26.5,-57.3,39.2,-48.1Z" transform="rotate(60)"/></svg><svg class="forma" style="top:45%;left:-220px;width:380px" viewBox="-80 -80 160 160"><path fill="#F6C6DB" d="M52.3,-61.4C66.6,-50.8,76.1,-33.4,78.3,-15.4C80.5,2.6,75.4,21.2,64.6,34.4C53.8,47.6,37.3,55.4,20.4,61.5C3.5,67.6,-13.8,72,-29.6,67.1C-45.4,62.2,-59.7,48,-67.4,31.1C-75.1,14.2,-76.2,-5.4,-69.6,-21.5C-63,-37.6,-48.7,-50.2,-33.4,-60.4C-18.1,-70.6,-1.8,-78.4,14.4,-77.1C30.6,-75.8,38,-72,52.3,-61.4Z" transform="rotate(-40)"/></svg><svg class="forma" style="top:62%;right:-200px;width:360px" viewBox="-80 -80 160 160"><path fill="#F3E39C" d="M44.7,-58.6C57.4,-49.9,66.5,-35.6,70.9,-19.8C75.3,-4,75,13.4,67.9,27.4C60.8,41.4,46.8,52.1,31.4,59.6C16,67.1,-0.8,71.4,-17.6,68.6C-34.4,65.8,-51.2,55.9,-61.9,41.5C-72.6,27.1,-77.2,8.2,-73.6,-8.8C-70,-25.8,-58.2,-40.9,-44,-49.7C-29.8,-58.5,-14.9,-61,0.6,-61.8C16.1,-62.6,32,-67.3,44.7,-58.6Z" transform="rotate(150)"/></svg><svg class="forma" style="top:78%;left:-230px;width:420px" viewBox="-80 -80 160 160"><path fill="#D8C4F4" d="M39.2,-48.1C51.9,-38.9,63.6,-26.6,67.2,-12C70.8,2.6,66.4,19.5,56.8,32.2C47.2,44.9,32.4,53.4,16.3,59.3C0.2,65.2,-17.2,68.5,-31.6,62.6C-46,56.7,-57.4,41.6,-63.7,24.9C-70,8.2,-71.2,-10.1,-64.3,-24.5C-57.4,-38.9,-42.4,-49.4,-27.7,-58C-13,-66.6,1.4,-73.3,14.3,-70.6C27.2,-67.9,26.5,-57.3,39.2,-48.1Z" transform="rotate(20)"/></svg><svg class="forma" style="top:92%;right:-160px;width:320px" viewBox="-80 -80 160 160"><path fill="#BDE8C8" d="M52.3,-61.4C66.6,-50.8,76.1,-33.4,78.3,-15.4C80.5,2.6,75.4,21.2,64.6,34.4C53.8,47.6,37.3,55.4,20.4,61.5C3.5,67.6,-13.8,72,-29.6,67.1C-45.4,62.2,-59.7,48,-67.4,31.1C-75.1,14.2,-76.2,-5.4,-69.6,-21.5C-63,-37.6,-48.7,-50.2,-33.4,-60.4C-18.1,-70.6,-1.8,-78.4,14.4,-77.1C30.6,-75.8,38,-72,52.3,-61.4Z" transform="rotate(80)"/></svg></div>
+<header><div class="topo">
+  <img class="logo" src="logo.png" alt="PSN · Camada por camada">
+  <label class="busca"><span>🔍</span><input type="search" id="busca" placeholder="Buscar letrinhas, bichinhos…" aria-label="Buscar"></label>
+  <button class="btn-carrinho" data-a="abrirCarrinho" aria-label="Abrir carrinho">🛒 <span>Carrinho</span> <b id="nCarr">0</b></button>
+</div></header>
+
+<section class="hero">
+  <h1><span class="a">Escolha.</span> <span class="b">Personalize.</span> <span class="c">Peça.</span></h1>
+  <p id="frase"></p>
+</section>
+<div class="aviso-teste" id="avisoTeste" hidden><div>⚠️ <b>Catálogo em teste:</b> os preços ainda não são os definitivos.</div></div>
+
+<section class="banner" id="banner" aria-roledescription="carrossel" aria-label="Destaques"></section>
+
+<main class="secao" id="pecas">
+  <h2>Nossas peças</h2>
+  <p class="sub">Monte seu pedido e envie pelo WhatsApp. A gente confirma e combina o pagamento por lá.</p>
+  <div class="secoes" id="secoes"></div>
+  <div class="capa" id="capa" hidden></div>
+  <div class="promo" id="promo"></div>
+  <div class="chips" id="chips"></div>
+  <div class="grade" id="grade"></div>
+</main>
+
+<footer><img src="logo.png" alt="" style="height:60px;margin:0 auto 8px;opacity:.9"><div id="rodape"></div></footer>
+
+<div class="barra-carr" id="barraCarr"><button data-a="abrirCarrinho"><span id="barraN">Ver carrinho</span><span id="barraT"></span></button></div>
+<a class="zap" id="zap" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>
+</a>
+
+<div class="fundo" id="fundo" data-a="fecharCarrinho"></div>
+<aside class="gaveta" id="gaveta" aria-label="Carrinho">
+  <div class="cab"><h2>🛒 Seu pedido</h2><button class="fechar" data-a="fecharCarrinho" aria-label="Fechar">×</button></div>
+  <div class="itens" id="itens"></div>
+  <div class="fim" id="fim"></div>
+</aside>
+<div class="fundo" id="fundoKit" data-a="fecharKit"></div>
+<aside class="gaveta kit-modal" id="kitModal" aria-label="Montar kit">
+  <div class="cab"><h2 id="kitTitulo">Kit</h2><button class="fechar" data-a="fecharKit" aria-label="Fechar">×</button></div>
+  <div class="itens" id="kitPecas"></div>
+  <div class="fim" id="kitFim"></div>
+</aside>
+<div id="toast"></div>
+
+<script src="dados.js?v=2026112208"></script>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const R = v => Number(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const CHAVE = 'psn_catalogo_carrinho', CHAVE_CLI = 'psn_catalogo_cliente';
+const DP = typeof DESCONTO_PIX !== 'undefined' ? DESCONTO_PIX : { formas: [], faixas: [] };
+const LISTA_KITS = typeof KITS !== 'undefined' ? KITS : [];
+
+let carrinho = [];
+try { carrinho = JSON.parse(localStorage.getItem(CHAVE)) || []; } catch (e) { carrinho = []; }
+const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify(carrinho)); } catch (e) {} };
+let cliente = {};
+try { cliente = JSON.parse(localStorage.getItem(CHAVE_CLI)) || {}; } catch (e) { cliente = {}; }
+const salvarCli = () => { try { localStorage.setItem(CHAVE_CLI, JSON.stringify(cliente)); } catch (e) {} };
+const LISTA_SECOES = typeof SECOES !== 'undefined' ? SECOES : [{ id: 'todos', nome: 'Tudo' }];
+const secaoDaCat = id => (CATEGORIAS.find(c => c.id === id) || {}).secao || LISTA_SECOES[0].id;
+const secaoDoKit = k => k.secao || LISTA_SECOES[0].id;
+let secao = LISTA_SECOES.some(x => x.id === decodeURIComponent(location.hash.slice(1))) ? decodeURIComponent(location.hash.slice(1)) : LISTA_SECOES[0].id;
+let filtro = 'todos', busca = '';
+const estado = {};   // por produto: { foto, qtd, escolhas:{}, nome, combo, cx }
+const PROD = {};     // id → produto (inclui as peças dentro dos kits)
+for (const p of PRODUTOS) PROD[p.id] = p;
+const prod = id => PROD[id];
+
+function st(p) {
+  if (!estado[p.id]) {
+    const esc0 = {};
+    for (const o of p.opcoes || []) esc0[o.nome] = null;
+    estado[p.id] = { foto: 0, qtd: 1, escolhas: esc0, nome: '', combo: 0, cx: [], modelo: 0 };
+  }
+  return estado[p.id];
+}
+const limparNome = t => String(t).toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z ]/g, '');
+const tecla = (l, base, letra) => `<span class="tecla" style="background:${base};color:${letra}">${esc(l)}</span>`;
+const pctTxt = v => String(v).replace('.', ',') + '%';
+
+/* ---------- desconto no Pix / dinheiro ---------- */
+function faixaPara(valor) { let f = null; for (const x of DP.faixas) if (valor > x.acima && (!f || x.porcento > f.porcento)) f = x; return f; }
+function proximaFaixa(valor) { return DP.faixas.filter(x => x.acima >= valor).sort((a, b) => a.acima - b.acima)[0] || null; }
+const entraNoPix = x => x.kit ? !!DP.valeParaKits : !!(prod(x.pid) && prod(x.pid).descontoPix);
+function contas() {
+  const sub = carrinho.reduce((s, x) => s + x.unit * x.qtd, 0);
+  const base = carrinho.filter(entraNoPix).reduce((s, x) => s + x.unit * x.qtd, 0);
+  const f = faixaPara(base), prox = proximaFaixa(base);
+  const pag = cliente.pag || DP.formas[0] || 'Pix';
+  const vale = !!f && DP.formas.includes(pag);
+  const desc = f ? Math.round(base * f.porcento) / 100 : 0;
+  return { sub, base, f, prox, pag, vale, desc, total: sub - (vale ? desc : 0) };
+}
+/* "Faltam R$ X para ganhar 10%": soma o que já está no carrinho com o que está sendo montado */
+function avisoDesconto(extra = 0) {
+  if (!DP.faixas.length) return '';
+  const base = carrinho.filter(entraNoPix).reduce((s, x) => s + x.unit * x.qtd, 0) + extra;
+  const f = faixaPara(base), prox = proximaFaixa(base), formas = formasTxt();
+  if (prox) { const falta = Math.max(0.01, Math.round((prox.acima - base) * 100) / 100);
+    return `<div class="promo-mini">✨ Faltam <b>${R(falta)}</b> para você ganhar <b>${pctTxt(prox.porcento)} de desconto</b> no ${esc(formas)}.</div>`; }
+  if (f) return `<div class="promo-mini">🎉 Seu pedido ganhou <b>${pctTxt(f.porcento)} de desconto</b> no ${esc(formas)}!</div>`;
+  return '';
+}
+const formasTxt = () => DP.formas.map(f => f === 'Pix' ? f : f.toLowerCase()).join(' ou ');
+const todosNoPix = () => PRODUTOS.every(p => p.descontoPix || p.oculto) && (DP.valeParaKits || !LISTA_KITS.length);
+/* o desconto é descrito pelas seções onde ele vale (ex.: "chaveiros e clickers") */
+const nomesPix = () => LISTA_SECOES.filter(x => PRODUTOS.some(p => p.descontoPix && !p.oculto && secaoDaCat(p.cat) === x.id)).map(x => x.nome.toLowerCase()).join(' e ');
+
+/* ---------- cards ---------- */
+function cardHtml(p) {
+  const s = st(p), kit = !!p.kitRotulo;
+  const fotos = p.fotos || [];
+  const f = fotos[s.foto] || fotos[0];
+  let h = kit ? `<article class="card mini" data-p="${p.id}"><div class="corpo"><div class="kit-rot">${esc(p.kitRotulo)}</div><h3>${esc(p.nome)}</h3>`
+    : `<article class="card" data-p="${p.id}"><div class="galeria${p.formato === 'retrato' ? ' retrato' : ''}">${f ? `<img src="fotos/${esc(f)}" alt="${esc(p.nome)}" loading="lazy"${ehInteira(f) ? ' class="inteira"' : ''}>` : ''}
+    ${p.tipo === 'nome' ? '<span class="tag">Personalizado</span>' : ''}
+    ${fotos.length > 1 ? `<button class="seta ant" data-a="foto" data-d="-1" aria-label="Foto anterior">‹</button><button class="seta prox" data-a="foto" data-d="1" aria-label="Próxima foto">›</button>
+      <div class="pontos">${fotos.length > 8 ? `<span class="cont">${s.foto + 1}/${fotos.length}</span>` : fotos.map((_, i) => `<i class="${i === s.foto ? 'on' : ''}"></i>`).join('')}</div>` : ''}</div>
+    <div class="corpo"><h3>${esc(p.nome)}</h3><p class="desc">${esc(p.descricao || '')}</p>`;
+  h += kit ? (p.tipo === 'nome' ? `<div class="desc">1 letra inclusa no kit · <b>+ ${R(p.kitLetraAdicional)}</b> cada letra a mais</div>` : '')
+    : p.preco == null ? `<div class="preco consulta">Preço sob consulta</div>` : `<div class="preco">${R(p.preco)} <small>/${esc(p.unidade || 'un.')}</small></div>`;
+  const opsHtml = () => opcoesAtuais(p).map(o => {
+    const sel = s.escolhas[o.nome];
+    const temCor = o.valores.some(v => v.cor);
+    return `<div><div class="op-nome">${esc(o.nome)}: <b>${sel != null ? esc(o.valores[sel].nome) : 'escolha'}</b></div><div class="valores">${o.valores.map((v, i) =>
+      `<button class="val ${temCor && !/bichinho/i.test(o.nome) ? 'cor' : ''} ${i === sel ? 'on' : ''}" data-a="opcao" data-o="${esc(o.nome)}" data-i="${i}" title="${esc(v.nome)}" aria-label="${esc(v.nome)}">${v.cor ? `<span class="bol" style="background:${v.cor}"></span>` : ''}${temCor ? '' : esc(v.nome)}</button>`).join('')}</div></div>`;
+  }).join('');
+  if (p.tipo === 'nome') {
+    const c = p.cores[s.combo];
+    h += `<div><div class="op-nome">Cor das letrinhas: <b>${esc(c.nome)}</b></div><div class="valores">${p.cores.map((x, i) =>
+      `<button class="val combo ${i === s.combo ? 'on' : ''}" data-a="combo" data-i="${i}" title="${esc(x.nome)}" aria-label="${esc(x.nome)}">${tecla('A', x.base, x.letra)}</button>`).join('')}</div></div>
+      ${p.modelos ? `<div><div class="op-nome">Modelo da caixeta: <b>${esc(modeloDe(p).nome)}</b></div><div class="valores">${p.modelos.map((m, i) =>
+        `<button class="val ${i === (s.modelo || 0) ? 'on' : ''}" data-a="modelo" data-i="${i}">${esc(m.nome)}</button>`).join('')}</div>
+        <div class="desc" style="margin-top:4px">${esc(modeloDe(p).descricao || '')}</div></div>` : ''}
+      <div><div class="op-nome">Nome ou palavra${ehLisa(p) ? ` (até ${maxLetras(p)} letras)` : ''}</div><input class="nome-in" data-nome maxlength="20" value="${esc(s.nome)}" placeholder="Digite aqui" autocomplete="off"></div>
+      ${opsHtml()}
+      <div class="previa" data-previa>${previa(p)}</div>`;
+  } else {
+    if (kit && fotos.length) { const fa = fotoDaCombinacao(p) || opcoesAtuais(p).map(o => s.escolhas[o.nome] != null ? o.valores[s.escolhas[o.nome]].foto : null).find(Boolean) || fotos[0];
+      h += `<div class="mini-foto"><img src="fotos/${esc(fa)}" alt="${esc(p.nome)}"></div>`; }
+    h += opsHtml();
+  }
+  if (!kit) h += `<div class="rodape-card">${p.tipo === 'nome' ? '' : `<div class="qtd"><button data-a="qtd" data-d="-1" aria-label="Menos">−</button><span>${s.qtd}</span><button data-a="qtd" data-d="1" aria-label="Mais">+</button></div>`}
+    <button class="add" data-a="adicionar">${p.tipo === 'nome' ? 'Adicionar nome' : 'Adicionar'}</button></div>`;
+  return h + `</div></article>`;
+}
+/* modelo de caixeta escolhido (Ondulada = cor por letra; Lisa = peça única, uma cor só) */
+const modeloDe = p => p.modelos ? p.modelos[st(p).modelo || 0] : null;
+const ehLisa = p => !!(modeloDe(p) && modeloDe(p).pecaUnica);
+const maxLetras = p => (modeloDe(p) && modeloDe(p).maxLetras) || 20;
+/* fotos que nunca podem ser cortadas (no celular aparecem inteiras, com o fundo creme dos lados) */
+const ehInteira = f => (typeof FOTOS_INTEIRAS !== 'undefined' ? FOTOS_INTEIRAS : []).some(x => x.endsWith('*') ? f.startsWith(x.slice(0, -1)) : f === x);
+const caixetaOp = p => { const m = modeloDe(p); return m && m.cores ? { nome: (p.opcoes || [])[0].nome, valores: m.cores } : (p.opcoes || [])[0]; };
+const opcoesAtuais = p => p.tipo === 'nome' ? [caixetaOp(p), ...(p.opcoes || []).slice(1)] : (p.opcoes || []);
+/* foto da combinação escolhida (ex.: "Lobo|Rosa") */
+function fotoDaCombinacao(p) {
+  if (!p.fotosCombo) return null;
+  const s = st(p), nomes = (p.opcoes || []).map(o => s.escolhas[o.nome] != null ? o.valores[s.escolhas[o.nome]].nome : null);
+  if (nomes.some(n => n == null)) return null;
+  return p.fotosCombo[nomes.join('|')] || null;
+}
+/* cor (índice) da caixeta de cada letra: a que ela pintou, ou a cor escolhida no momento */
+function coresCaixeta(p) {
+  const s = st(p), n = limparNome(s.nome).replace(/ /g, ''), atual = s.escolhas[caixetaOp(p).nome];
+  s.cx = s.cx || [];
+  return n.split('').map((_, j) => ehLisa(p) ? atual : (s.cx[j] ?? atual));
+}
+function previa(p) {
+  const s = st(p), c = p.cores[s.combo];
+  const n = limparNome(s.nome).trim().replace(/\s+/g, ' '), qtd = n.replace(/ /g, '').length;
+  if (!qtd) return `<span class="vazio">A prévia aparece aqui ✨</span>`;
+  const cores = coresCaixeta(p);
+  let j = -1;
+  const mix = new Set(cores).size > 1;
+  return n.split('').map(l => { if (l === ' ') return '<span style="width:12px"></span>'; j++;
+    const ci = cores[j], cor = ci != null ? caixetaOp(p).valores[ci].cor : '#ece6f3';
+    return `<button class="cx" data-a="pintar" data-j="${j}" title="Trocar a cor desta caixeta" style="background:${cor}">${tecla(l, c.base, c.letra)}</button>`; }).join('')
+    + `<span style="margin-left:auto;font-weight:800;color:var(--roxo)">${p.kitDe ? `${qtd} ${qtd === 1 ? 'letra' : 'letras'}` : `${qtd} × ${R(p.preco)} = ${R(qtd * p.preco)}`}</span>`
+    + (qtd > maxLetras(p) ? `<div class="dica" style="color:#c0392b"><b>Este modelo vai até ${maxLetras(p)} letras.</b> Diminua o nome ou escolha o outro modelo.</div>` : '')
+    + `<div class="dica">${s.escolhas[caixetaOp(p).nome] == null ? 'Escolha a cor da caixeta acima 👆' : ehLisa(p) ? 'Caixeta lisa: é uma peça só, na mesma cor para o nome todo.' : `Quer uma caixeta de outra cor? Escolha a cor acima e <b>toque na letra</b>.${mix ? ` <button class="link" data-a="pintarTodas">Deixar todas iguais</button>` : ''}`}</div>`;
+}
+function opcionaisTxt(k) {
+  const pcs = k.pecas.filter(pc => typeof pc === 'object' && pc.opcional && !pc.cordinha);
+  if (!pcs.length) return '';
+  const precos = pcs.flatMap(pc => pc.escolha.map(prod).filter(Boolean).map(b => b.preco)), mn = Math.min(...precos), mx = Math.max(...precos);
+  return `<br>+ <b>${R(mn)}${mx > mn ? ' a ' + R(mx) : ''}</b> por bichinho, se quiser junto`;
+}
+function kitCardHtml(k) {
+  const s = st({ id: k.id }), fotos = k.fotos || [], f = fotos[s.foto] || fotos[0];
+  return `<article class="card" data-kit="${k.id}"><div class="galeria${k.formato === 'retrato' ? ' retrato' : ''}">${f ? `<img src="fotos/${esc(f)}" alt="${esc(k.nome)}" loading="lazy"${ehInteira(f) ? ' class="inteira"' : ''}>` : ''}
+    <span class="tag kit">${k.precoLetra ? 'Personalizado' : 'Kit'}</span>
+    ${fotos.length > 1 ? `<button class="seta ant" data-a="kfoto" data-d="-1" aria-label="Foto anterior">‹</button><button class="seta prox" data-a="kfoto" data-d="1" aria-label="Próxima foto">›</button>
+      <div class="pontos">${fotos.map((_, i) => `<i class="${i === s.foto ? 'on' : ''}"></i>`).join('')}</div>` : ''}</div>
+    <div class="corpo"><h3>${esc(k.nome)}</h3><p class="desc">${esc(k.descricao || '')}</p>
+    <div><div class="op-nome">${esc(k.rotuloInclui || 'Vem no kit')}</div><ul class="kit-lista">${(k.inclui || []).map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>
+    ${k.precoLetra ? `<div class="preco"><small>a partir de</small> ${R(k.precoLetra)} <small>/letra</small></div>
+    <div class="desc">Com cordinha e pingente: <b>${R(k.preco)}</b> já com 1 letra + <b>${R(k.letraAdicional)}</b> cada letra a mais${opcionaisTxt(k)}</div>`
+    : `<div class="preco">${R(k.preco)}</div>
+    <div class="desc">${k.letraAdicional ? `+ <b>${R(k.letraAdicional)}</b> cada letra a mais` : ''}${opcionaisTxt(k)}</div>`}
+    <div class="rodape-card"><button class="add" data-a="abrirKit">${k.precoLetra ? 'Montar meu chaveiro' : 'Montar meu kit'}</button></div></div></article>`;
+}
+function render() {
+  const norm = t => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const b = norm(busca.trim());
+  const temItens = id => PRODUTOS.some(p => !p.oculto && secaoDaCat(p.cat) === id) || LISTA_KITS.some(k => secaoDoKit(k) === id);
+  const secoes = LISTA_SECOES.filter(x => temItens(x.id) || x.emBreve);
+  if (!secoes.some(x => x.id === secao)) secao = secoes[0] ? secoes[0].id : secao;
+  $('#secoes').innerHTML = secoes.length > 1 ? secoes.map(x => `<button class="aba-sec ${x.id === secao ? 'ativa' : ''}" data-a="secao" data-v="${x.id}">${esc(x.nome)}${x.emBreve && !temItens(x.id) ? '<small>em breve</small>' : ''}</button>`).join('') : '';
+  const sec = LISTA_SECOES.find(x => x.id === secao) || {};
+  // busca procura em todas as seções
+  const naSecao = id => b ? true : id === secao;
+  const cats = CATEGORIAS.filter(c => c.secao === secao && (PRODUTOS.some(p => !p.oculto && p.cat === c.id) || (c.id === 'kits' && LISTA_KITS.some(k => secaoDoKit(k) === secao))));
+  $('#chips').innerHTML = !b && cats.length > 1 ? [['todos', 'Tudo']].concat(cats.map(c => [c.id, c.nome])).map(([id, n]) =>
+    `<button class="chip ${filtro === id ? 'ativo' : ''}" data-a="filtro" data-v="${id}">${esc(n)}</button>`).join('') : '';
+  const f = b ? 'todos' : filtro;
+  const catSel = CATEGORIAS.find(c => c.id === f), capa = !b && ((catSel && catSel.capa) ? catSel : sec.capa ? sec : null);
+  const elCapa = $('#capa'); elCapa.hidden = !capa || typeof BANNER !== 'undefined';
+  if (capa) { const src = 'fotos/' + capa.capa; if (elCapa.dataset.src !== src) { elCapa.dataset.src = src; elCapa.className = 'capa' + (capa.capaInteira ? ' inteira' : '');
+    elCapa.innerHTML = `<img src="${esc(src)}" alt="${esc(capa.nome)}">`; } }
+  const kits = LISTA_KITS.filter(k => naSecao(secaoDoKit(k)) && (f === 'todos' || f === 'kits') && (!b || norm(k.nome + ' ' + (k.descricao || '') + ' kit combo').includes(b)));
+  const lista = PRODUTOS.filter(p => !p.oculto && naSecao(secaoDaCat(p.cat)) && (f === 'todos' || p.cat === f) &&
+    (!b || norm(p.nome + ' ' + (p.descricao || '') + ' ' + (p.opcoes || []).map(o => o.valores.map(v => v.nome).join(' ')).join(' ')).includes(b)));
+  const temPix = PRODUTOS.some(p => p.descontoPix && !p.oculto && secaoDaCat(p.cat) === secao) || (DP.valeParaKits && LISTA_KITS.some(k => secaoDoKit(k) === secao));
+  $('#promo').hidden = true;   // o aviso do desconto aparece ao montar o chaveiro e no carrinho
+  let html = kits.map(kitCardHtml).join('') + lista.map(cardHtml).join('');
+  if (!html && !b && sec.emBreve) html = `<article class="card em-breve"><div class="corpo"><div style="font-size:3rem">${sec.icone || '✨'}</div><h3>${esc(sec.nome)}: em breve!</h3>
+    <p class="desc">${esc(sec.textoEmBreve || 'Novidades chegando.')}</p>
+    <div class="rodape-card"><a class="add" style="text-align:center;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent('Olá, PSN! Quero ser avisado(a) quando chegarem as ' + sec.nome.toLowerCase() + '.')}">Quero ser avisado(a) no WhatsApp</a></div></div></article>`;
+  $('#grade').innerHTML = html || `<p class="sub">Nada encontrado. Que tal perguntar no WhatsApp? 💜</p>`;
+}
+function atualizarCard(p) {
+  const el = document.querySelector(`.card[data-p="${p.id}"]`); if (!el) return;
+  const foco = document.activeElement && document.activeElement.hasAttribute('data-nome') && el.contains(document.activeElement);
+  const pos = foco ? document.activeElement.selectionStart : 0;
+  el.outerHTML = cardHtml(p);
+  if (foco) { const i = document.querySelector(`.card[data-p="${p.id}"] [data-nome]`); i.focus(); i.setSelectionRange(pos, pos); }
+  if (p.kitDe) atualizarKitFim();
+}
+
+/* ---------- monta o item a partir das escolhas (null se faltar algo) ---------- */
+function montarItem(p) {
+  const s = st(p);
+  if (p.tipo === 'nome') {
+    const n = limparNome(s.nome).trim().replace(/\s+/g, ' '), qtdL = n.replace(/ /g, '').length;
+    if (!qtdL) { toast('Digite o nome primeiro 😉'); const i = document.querySelector(`.card[data-p="${p.id}"] [data-nome]`); if (i) i.focus(); return null; }
+    if (qtdL > maxLetras(p)) { toast(`O modelo ${modeloDe(p).nome.toLowerCase()} vai até ${maxLetras(p)} letras`); return null; }
+    for (const o of opcoesAtuais(p)) if (s.escolhas[o.nome] == null) { toast(`Escolha: ${o.nome.toLowerCase()}`); return null; }
+    const c = p.cores[s.combo];
+    const op = caixetaOp(p), cores = coresCaixeta(p), letras = n.replace(/ /g, '').split('');
+    const extra = new Set(cores).size === 1 ? `Caixeta: ${op.valores[cores[0]].nome}`
+      : 'Caixetas: ' + letras.map((l, j) => `${l} ${op.valores[cores[j]].nome}`).join(', ');
+    const mod = modeloDe(p) ? `Modelo: ${modeloDe(p).nome} · ` : '';
+    return { pid: p.base || p.id, nome: p.nome, detalhe: `“${n}” · ${mod}Letrinhas: ${c.nome} · ${extra}`, qtd: 1, unit: p.preco * qtdL, letras: qtdL, foto: p.fotos[0] };
+  }
+  for (const o of p.opcoes || []) if (s.escolhas[o.nome] == null) { toast(`${p.kitRotulo ? p.kitRotulo + ': e' : 'E'}scolha ${o.nome.toLowerCase()}`); return null; }
+  const det = (p.opcoes || []).map(o => `${o.nome}: ${o.valores[s.escolhas[o.nome]].nome}`).join(' · ');
+  const fotoOp = fotoDaCombinacao(p) || (p.opcoes || []).map(o => o.valores[s.escolhas[o.nome]].foto).find(Boolean);
+  return { pid: p.base || p.id, nome: p.nome, detalhe: det, qtd: p.kitDe ? 1 : s.qtd, unit: p.preco ?? 0, consulta: p.preco == null, foto: fotoOp || p.fotos[0] };
+}
+function adicionar(p) {
+  const item = montarItem(p); if (!item) return;
+  const s = st(p);
+  const igual = carrinho.find(x => !x.kit && x.pid === item.pid && x.detalhe === item.detalhe);
+  if (igual) igual.qtd += item.qtd; else carrinho.push(item);
+  salvar(); atualizarCarrinho();
+  if (p.tipo === 'nome') { s.nome = ''; s.cx = []; } else s.qtd = 1;
+  atualizarCard(p);
+  const bt = document.querySelector(`.card[data-p="${p.id}"] .add`);
+  if (bt) { bt.classList.add('ok'); bt.textContent = '✓ No carrinho'; setTimeout(() => { bt.classList.remove('ok'); bt.textContent = p.tipo === 'nome' ? 'Adicionar nome' : 'Adicionar'; }, 1400); }
+  toast('Adicionado ao carrinho 🛒');
+}
+
+/* ---------- kits ---------- */
+let kitAtual = null, kitPecas = [];   // cada peça: { tipo:'prod', p } ou { tipo:'escolha', rotulo, opcoes:[pid], escolhido, p }
+function clonar(k, base, chave, rotulo) {
+  const c = Object.assign({}, base, { id: k.id + '__' + chave, base: base.id, kitDe: k.id, kitRotulo: rotulo, kitLetraAdicional: k.letraAdicional || 0 });
+  if (!PROD[c.id]) PROD[c.id] = c;
+  return PROD[c.id];
+}
+function abrirKit(k) {
+  kitAtual = k;
+  for (const id of Object.keys(PROD)) if (id.startsWith(k.id + '__')) { delete PROD[id]; delete estado[id]; }
+  const tot = k.pecas.length;
+  kitPecas = k.pecas.map((pc, i) => {
+    const rot = `Peça ${i + 1} de ${tot}`;
+    if (typeof pc === 'string') { const b = prod(pc); return b ? { tipo: 'prod', i, p: clonar(k, b, i, rot) } : null; }
+    const o = { tipo: 'escolha', i, rot, rotulo: pc.rotulo || 'Escolha', opcional: !!pc.opcional, cordinha: !!pc.cordinha, sem: pc.sem, extra: pc.extra, opcoes: pc.escolha.filter(prod), escolhido: pc.opcional ? '' : null, p: null };
+    if (pc.padrao && prod(pc.padrao)) { o.escolhido = pc.padrao; o.p = clonar(k, prod(pc.padrao), i + '__' + pc.padrao, prod(pc.padrao).nome); }
+    return o;
+  }).filter(Boolean);
+  $('#kitTitulo').textContent = (k.precoLetra ? '' : '🎁 ') + k.nome;
+  desenharKit();
+  $('#kitModal').classList.add('on'); $('#fundoKit').classList.add('on'); document.body.style.overflow = 'hidden';
+  $('#kitPecas').scrollTop = 0;
+}
+function pecaKitHtml(pc) {
+  if (pc.tipo === 'prod') return cardHtml(pc.p);
+  return `<article class="card mini" data-escolha="${pc.i}"><div class="corpo"><div class="kit-rot">${esc(pc.rot)}</div><h3>${esc(pc.rotulo)}</h3>
+    <div class="escolhas">${pc.opcional ? `<button class="esc-prod sem ${pc.escolhido === '' ? 'on' : ''}" data-a="escolherKit" data-i="${pc.i}" data-pid=""><span class="sem-ico">🚫</span><span>${esc(pc.sem || 'Não, só o chaveiro')}</span></button>` : ''}
+      ${pc.opcoes.map(id => { const b = prod(id); return `<button class="esc-prod ${pc.escolhido === id ? 'on' : ''}" data-a="escolherKit" data-i="${pc.i}" data-pid="${id}">
+      ${b.fotos && b.fotos[0] ? `<img src="fotos/${esc(b.fotos[0])}" alt="">` : ''}<span>${esc(b.nome)}</span>${pc.extra ? `<small>+ ${esc(pc.extra)}</small>` : pc.opcional ? `<small>+ ${R(b.preco)}</small>` : ''}</button>`; }).join('')}</div>
+    ${pc.p ? `<div class="esc-config"${(pc.p.opcoes || []).length || pc.p.tipo === 'nome' ? '' : ' hidden'}>${cardHtml(pc.p)}</div>` : ''}</div></article>`;
+}
+function desenharKit() {
+  const k = kitAtual;
+  $('#kitPecas').innerHTML = `<p class="kit-intro">${esc(k.descricao || '')}</p>
+    ${k.precoLetra ? '' : `<div class="kit-inclui"><b>Vem no kit:</b> ${(k.inclui || []).map(esc).join(' · ')}</div>`}` + kitPecas.map(pecaKitHtml).join('');
+  atualizarKitFim();
+}
+const letrasDoKit = () => kitPecas.reduce((s, pc) => s + (pc.p && pc.p.tipo === 'nome' ? limparNome(st(pc.p).nome).replace(/ /g, '').length : 0), 0);
+const opcionaisEscolhidos = () => kitPecas.filter(pc => pc.tipo === 'escolha' && pc.opcional && !pc.cordinha && pc.p).map(pc => ({ nome: pc.p.nome, preco: prod(pc.p.base).preco }));
+/* com cordinha? (no kit antigo a cordinha é obrigatória) */
+const comCordinha = () => !kitAtual.precoLetra || kitPecas.some(pc => pc.cordinha && pc.p);
+const precoKit = (k, letras, opc = [], cord = true) => (cord || !k.precoLetra ? k.preco + Math.max(0, letras - 1) * (k.letraAdicional || 0) : letras * k.precoLetra) + opc.reduce((s, o) => s + o.preco, 0);
+function atualizarKitFim() {
+  if (!kitAtual) return;
+  const k = kitAtual, n = letrasDoKit(), extra = Math.max(0, n - 1), opc = opcionaisEscolhidos(), cord = comCordinha(), tot = precoKit(k, n, opc, cord);
+  const linhas = cord
+    ? `<div class="linha-tot"><span>${k.precoLetra ? 'Com cordinha e pingente (já com 1 letra)' : 'Kit (1 letra + cordinha + pingente)'}</span><span>${R(k.preco)}</span></div>
+      ${extra ? `<div class="linha-tot"><span>${extra} ${extra === 1 ? 'letra a mais' : 'letras a mais'} × ${R(k.letraAdicional)}</span><span>+ ${R(extra * k.letraAdicional)}</span></div>` : ''}`
+    : `<div class="linha-tot"><span>${n || 0} ${n === 1 ? 'letra' : 'letras'} × ${R(k.precoLetra)}</span><span>${R(n * k.precoLetra)}</span></div>`;
+  $('#kitFim').innerHTML = linhas
+    + opc.map(o => `<div class="linha-tot"><span>${esc(o.nome)}</span><span>+ ${R(o.preco)}</span></div>`).join('')
+    + `<div class="total"><span>Total</span><span>${R(tot)}</span></div>`
+    + (n ? avisoDesconto(DP.valeParaKits ? tot : 0) : '<p class="nota" style="margin:0 0 8px">Digite a letra ou o nome do chaveiro.</p>')
+    + `<button class="add" style="width:100%" data-a="adicionarKit">Adicionar ao carrinho</button>`;
+}
+function adicionarKit() {
+  const k = kitAtual, partes = [];
+  for (const pc of kitPecas) {
+    if (pc.tipo === 'escolha' && !pc.p && pc.opcional) continue;
+    if (pc.tipo === 'escolha' && !pc.p) { toast(`${pc.rot}: escolha o ${pc.rotulo.split(' ')[0].toLowerCase()}`); const el = document.querySelector(`[data-escolha="${pc.i}"]`); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    const it = montarItem(pc.p);
+    if (!it) { const el = document.querySelector(`.card[data-p="${pc.p.id}"]`); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    partes.push(it);
+  }
+  const letras = partes.reduce((s, x) => s + (x.letras || 0), 0), extra = Math.max(0, letras - 1), opc = opcionaisEscolhidos(), cord = comCordinha();
+  carrinho.push({ kit: true, pid: k.id, nome: k.nomePedido || k.nome, qtd: 1, unit: precoKit(k, letras, opc, cord), precoBase: k.preco, letraAdicional: k.letraAdicional || 0, extra, opcionais: opc,
+    semCordinha: !cord, letras, precoLetra: k.precoLetra || 0,
+    inclui: k.precoLetra ? (cord ? ['letrinhas com caixeta', 'cordinha', 'pingente de brinde'] : ['letrinhas com caixeta']) : (k.inclui || []), partes: partes.map(x => ({ nome: x.nome, detalhe: x.detalhe, letras: x.letras || 0 })),
+    detalhe: partes.map(x => x.nome + (x.detalhe ? ` (${x.detalhe})` : '')).join(' + '), foto: (k.fotos || [])[0] });
+  salvar(); atualizarCarrinho(); fecharKit(); toast(k.precoLetra ? 'Chaveiro adicionado ao carrinho 💜' : 'Kit adicionado ao carrinho 🎁');
+}
+function fecharKit() { $('#kitModal').classList.remove('on'); $('#fundoKit').classList.remove('on'); document.body.style.overflow = ''; }
+
+/* ---------- carrinho ---------- */
+function contaKit(x) {
+  if (x.semCordinha) {
+    const p = [`${x.letras} ${x.letras === 1 ? 'letra' : 'letras'} × ${R(x.precoLetra)}`];
+    for (const o of x.opcionais || []) p.push(`${o.nome} ${R(o.preco)}`);
+    return p.join(' + ') + ' = ' + R(x.unit);
+  }
+  const partes = [x.precoLetra ? `Com cordinha e pingente (1ª letra) ${R(x.precoBase)}` : R(x.precoBase)];
+  if (x.extra) partes.push(`${x.extra} letra${x.extra > 1 ? 's' : ''} a mais × ${R(x.letraAdicional)}`);
+  for (const o of x.opcionais || []) partes.push(`${o.nome} ${R(o.preco)}`);
+  return partes.length > 1 ? partes.join(' + ') + ' = ' + R(x.unit) : 'Valor do kit: ' + R(x.unit);
+}
+const nItens = () => carrinho.reduce((s, x) => s + x.qtd, 0);
+function atualizarCarrinho() {
+  const n = nItens(), c = contas();
+  $('#nCarr').textContent = n;
+  $('#barraCarr').classList.toggle('on', n > 0);
+  $('#barraN').textContent = `🛒 Ver pedido (${n})`;
+  $('#barraT').textContent = R(c.total);
+  $('#itens').innerHTML = carrinho.length ? carrinho.map((x, i) => `<div class="item">${x.foto ? `<img src="fotos/${esc(x.foto)}" alt="">` : ''}
+    <div class="info"><b>${x.kit ? '🎁 ' : ''}${esc(x.nome)}</b>${x.kit ? `<small>Vem: ${esc((x.inclui || []).join(', '))}</small>` + x.partes.map(pt => `<small>• ${esc(pt.nome)}${pt.detalhe ? ' — ' + esc(pt.detalhe) : ''}</small>`).join('') + `<small>${esc(contaKit(x))}</small>`
+      : `<small>${esc(x.detalhe)}</small><small>${x.consulta ? 'preço sob consulta' : `${x.letras ? `${x.letras} letras · ` : ''}${R(x.unit)} cada`}</small>`}</div>
+    <div class="lado"><div class="qtd"><button data-a="cqtd" data-i="${i}" data-d="-1" aria-label="Menos">−</button><span>${x.qtd}</span><button data-a="cqtd" data-i="${i}" data-d="1" aria-label="Mais">+</button></div>
+    <b>${x.consulta ? 'a combinar' : R(x.unit * x.qtd)}</b><button class="remover" data-a="remover" data-i="${i}">remover</button></div></div>`).join('')
+    : `<div class="vazio-carr"><div style="font-size:3rem">🛒</div><p>Seu carrinho está vazio.<br>Escolha suas peças e toque em <b>Adicionar</b>.</p></div>`;
+  $('#fim').innerHTML = carrinho.length ? `<div id="resumo"></div>
+    <label class="campo">Forma de pagamento<select id="cPag">${['Pix', 'Dinheiro', 'Cartão de crédito', 'Cartão de débito'].map(o => `<option ${c.pag === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>
+    <label class="campo">Seu nome<input id="cNome" value="${esc(cliente.nome || '')}" placeholder="Como podemos te chamar?" autocomplete="name"></label>
+    <label class="campo">Como quer receber?<select id="cEntrega">${['Retirar', 'Entrega na minha cidade', 'Envio pelos Correios', 'Ainda não sei'].map(o => `<option ${cliente.entrega === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>
+    <label class="campo">Cidade / bairro<input id="cCidade" value="${esc(cliente.cidade || '')}" placeholder="opcional" autocomplete="address-level2"></label>
+    <label class="campo">Observação<textarea id="cObs" placeholder="opcional (ex.: é para presente)">${esc(cliente.obs || '')}</textarea></label>
+    <button class="enviar" data-a="enviar"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg> Enviar pedido pelo WhatsApp</button>
+    <p class="nota">O pedido abre no WhatsApp com tudo escrito. Lá a gente confirma, combina a entrega e o pagamento.</p>` : '';
+  atualizarResumo();
+}
+function atualizarResumo() {
+  const el = $('#resumo'); if (!el) return;
+  const c = contas(), formas = formasTxt();
+  let h = '';
+  if (c.f) {
+    h += `<div class="linha-tot"><span>Subtotal</span><span>${R(c.sub)}</span></div>`;
+    h += c.vale ? `<div class="linha-tot verde"><span>Desconto ${esc(formas)} (${pctTxt(c.f.porcento)} em ${R(c.base)})</span><span>− ${R(c.desc)}</span></div>`
+      : `<div class="promo-mini">💸 Pagando com ${esc(formas)}, você ganha <b>${pctTxt(c.f.porcento)}</b> (− ${R(c.desc)}).</div>`;
+  }
+  h += `<div class="total"><span>Total</span><span>${R(c.total)}</span></div>`;
+  if (carrinho.some(x => x.consulta)) h += `<div class="promo-mini" style="background:#FFF1BF;color:#5b4300">Alguns itens têm <b>preço sob consulta</b>: o valor deles é combinado no WhatsApp e não está no total.</div>`;
+  if (c.sub > 0) h += avisoDesconto();
+  el.innerHTML = h;
+  $('#barraT').textContent = R(c.total);
+}
+function mensagem() {
+  const c = contas();
+  const linhaPeca = (x, pre) => x.letras ? `${pre}${x.letras} letras (caixeta + letrinha) × ${R(x.unit / x.letras)} = ${R(x.unit)}\n` : '';
+  let m = `Olá, PSN! Quero fazer um pedido:\n\n`;
+  carrinho.forEach((x, i) => {
+    if (x.kit) {
+      m += `${i + 1}) ${x.nome}${x.qtd > 1 ? ` (${x.qtd} kits)` : ''}\n`;
+      if (x.inclui && x.inclui.length) m += `   Vem: ${x.inclui.join(', ')}\n`;
+      for (const pt of x.partes) m += `   • ${pt.nome}${pt.detalhe ? ' — ' + pt.detalhe : ''}\n`;
+      m += `   ${contaKit(x)}${x.qtd > 1 ? ` × ${x.qtd} kits = ${R(x.unit * x.qtd)}` : ''}\n`;
+      return;
+    }
+    m += `${i + 1}) ${x.nome}${x.detalhe ? ' — ' + x.detalhe : ''}\n`;
+    m += x.consulta ? `   ${x.qtd} × (preço sob consulta)\n` : x.letras ? `   ${x.qtd > 1 ? x.qtd + ' chaveiros × ' : ''}${x.letras} letras (caixeta + letrinha) × ${R(x.unit / x.letras)} = ${R(x.unit * x.qtd)}\n` : `   ${x.qtd} × ${R(x.unit)} = ${R(x.unit * x.qtd)}\n`;
+  });
+  m += `\nSubtotal: ${R(c.sub)}\n`;
+  if (c.vale) m += `Desconto ${c.pag} (${pctTxt(c.f.porcento)} em ${R(c.base)}): − ${R(c.desc)}\n`;
+  m += `*Total: ${R(c.total)}*${carrinho.some(x => x.consulta) ? ' + itens sob consulta' : ''}\n\n`;
+  m += `Pagamento: ${c.pag}\n`;
+  if (cliente.nome) m += `Nome: ${cliente.nome}\n`;
+  m += `Receber: ${cliente.entrega || 'Retirar'}${cliente.cidade ? ' — ' + cliente.cidade : ''}\n`;
+  if (cliente.obs) m += `Obs.: ${cliente.obs}\n`;
+  return m;
+}
+function abrirCarrinho(on) { $('#gaveta').classList.toggle('on', on); $('#fundo').classList.toggle('on', on); document.body.style.overflow = on ? 'hidden' : ''; }
+let tt; function toast(t) { const e = $('#toast'); e.textContent = t; e.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => e.classList.remove('on'), 1800); }
+
+/* ---------- eventos ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  const card = b.closest('.card'), p = card && card.dataset.p && prod(card.dataset.p), s = p && st(p);
+  const k = card && card.dataset.kit && LISTA_KITS.find(x => x.id === card.dataset.kit);
+  switch (b.dataset.a) {
+    case 'filtro': filtro = b.dataset.v; render(); break;
+    case 'banner': { const a = BANNER[+b.dataset.i]; secao = a.secao; filtro = a.filtro || 'todos'; busca = ''; history.replaceState(null, '', '#' + secao); render();
+      document.getElementById('pecas').scrollIntoView({ behavior: 'smooth' }); break; }
+    case 'secao': secao = b.dataset.v; filtro = 'todos'; history.replaceState(null, '', '#' + secao); render(); document.getElementById('pecas').scrollIntoView({ behavior: 'smooth' }); break;
+    case 'foto': s.foto = (s.foto + +b.dataset.d + p.fotos.length) % p.fotos.length; atualizarCard(p); break;
+    case 'kfoto': { const ks = st({ id: k.id }); ks.foto = (ks.foto + +b.dataset.d + k.fotos.length) % k.fotos.length; card.outerHTML = kitCardHtml(k); break; }
+    case 'combo': { s.combo = +b.dataset.i; const fi = p.fotos.indexOf(p.cores[s.combo].foto); if (fi >= 0) s.foto = fi; atualizarCard(p); break; }
+    case 'opcao': {
+      if (p.tipo === 'nome' && caixetaOp(p).nome === b.dataset.o) { const ant = coresCaixeta(p); if (ant.length && s.escolhas[b.dataset.o] != null) s.cx = ant; }
+      s.escolhas[b.dataset.o] = +b.dataset.i; const v = opcoesAtuais(p).find(o => o.nome === b.dataset.o).valores[+b.dataset.i];
+      const fc = fotoDaCombinacao(p) || v.foto; if (fc && p.fotos) { const fi = p.fotos.indexOf(fc); if (fi >= 0) s.foto = fi; } atualizarCard(p); break; }
+    case 'modelo': { s.modelo = +b.dataset.i; s.escolhas[caixetaOp(p).nome] = null; s.cx = []; const m = modeloDe(p);
+      if (m.cores && m.cores.length === 1) s.escolhas[caixetaOp(p).nome] = 0;
+      if (m.foto && p.fotos) { const fi = p.fotos.indexOf(m.foto); if (fi >= 0) s.foto = fi; } atualizarCard(p); break; }
+    case 'pintar': { if (ehLisa(p)) break; const at = s.escolhas[caixetaOp(p).nome]; if (at == null) { toast('Escolha primeiro a cor da caixeta'); break; } s.cx = coresCaixeta(p); s.cx[+b.dataset.j] = at; atualizarCard(p); break; }
+    case 'pintarTodas': s.cx = []; atualizarCard(p); break;
+    case 'qtd': s.qtd = Math.max(1, Math.min(99, s.qtd + +b.dataset.d)); atualizarCard(p); break;
+    case 'adicionar': adicionar(p); break;
+    case 'abrirKit': abrirKit(k); break;
+    case 'fecharKit': fecharKit(); break;
+    case 'adicionarKit': adicionarKit(); break;
+    case 'escolherKit': { const pc = kitPecas.find(x => x.i === +b.dataset.i); const base = b.dataset.pid ? prod(b.dataset.pid) : null;
+      pc.escolhido = base ? base.id : ''; pc.p = base ? clonar(kitAtual, base, pc.i + '__' + base.id, base.nome) : null; desenharKit();
+      const el = document.querySelector(`[data-escolha="${pc.i}"]`); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); break; }
+    case 'abrirCarrinho': abrirCarrinho(true); break;
+    case 'fecharCarrinho': abrirCarrinho(false); break;
+    case 'cqtd': { const x = carrinho[+b.dataset.i]; x.qtd += +b.dataset.d; if (x.qtd < 1) carrinho.splice(+b.dataset.i, 1); salvar(); atualizarCarrinho(); break; }
+    case 'remover': carrinho.splice(+b.dataset.i, 1); salvar(); atualizarCarrinho(); break;
+    case 'enviar': {
+      const url = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(mensagem())}`;
+      window.open(url, '_blank');
+      break;
+    }
+  }
+});
+const camposCli = { cNome: 'nome', cEntrega: 'entrega', cCidade: 'cidade', cObs: 'obs', cPag: 'pag' };
+function guardarCampo(t) { if (camposCli[t.id]) { cliente[camposCli[t.id]] = t.value.trim(); salvarCli(); if (t.id === 'cPag') atualizarResumo(); } }
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.id === 'busca') { busca = t.value; render(); if (busca) document.getElementById('pecas').scrollIntoView({ block: 'start' }); return; }
+  guardarCampo(t);
+  if (t.hasAttribute('data-nome')) {
+    const p = prod(t.closest('.card').dataset.p), s = st(p);
+    const limpo = limparNome(t.value);
+    if (limpo !== t.value.toUpperCase()) { const pos = t.selectionStart; t.value = limpo; t.setSelectionRange(pos, pos); }
+    s.nome = limpo;
+    t.closest('.card').querySelector('[data-previa]').innerHTML = previa(p);
+    if (p.kitDe) atualizarKitFim();
+  }
+});
+document.addEventListener('change', e => guardarCampo(e.target));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { abrirCarrinho(false); fecharKit(); }
+  if (e.key === 'Enter' && e.target.hasAttribute && e.target.hasAttribute('data-nome')) { const p = prod(e.target.closest('.card').dataset.p); if (!p.kitDe) adicionar(p); else e.target.blur(); }
+});
+
+/* ---------- início ---------- */
+$('#frase').textContent = LOJA.frase;
+if (typeof BANNER !== 'undefined' && BANNER.length) {
+  const bn = $('#banner'); let atual = 0, timer = null, x0 = null;
+  bn.innerHTML = `<div class="trilho">${BANNER.map((b, i) => `<button class="slide" data-a="banner" data-i="${i}" style="background:${esc(b.fundo || '#EADDF8')}" aria-label="${esc(b.nome)}">
+      <div class="txt"><h2>${esc(b.nome)}</h2><p>${esc(b.frase || '')}</p><span>Ver peças</span></div>
+      <div class="foto"><img src="fotos/${esc(b.capa)}" alt="" ${i ? 'loading="lazy"' : ''}></div></button>`).join('')}</div>
+    <div class="pontos-b">${BANNER.map((_, i) => `<button data-ir="${i}" aria-label="Destaque ${i + 1}"></button>`).join('')}</div>`;
+  const ir = i => { atual = (i + BANNER.length) % BANNER.length; bn.querySelector('.trilho').style.transform = `translateX(-${atual * 100}%)`;
+    bn.querySelectorAll('.pontos-b button').forEach((p, j) => p.classList.toggle('on', j === atual)); };
+  const tocar = () => { clearInterval(timer); timer = setInterval(() => ir(atual + 1), 5000); };
+  bn.addEventListener('click', e => { const p = e.target.closest('[data-ir]'); if (p) { e.stopPropagation(); ir(+p.dataset.ir); tocar(); } }, true);
+  bn.addEventListener('mouseenter', () => clearInterval(timer)); bn.addEventListener('mouseleave', tocar);
+  bn.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; clearInterval(timer); }, { passive: true });
+  bn.addEventListener('touchend', e => { if (x0 != null) { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) ir(atual + (dx < 0 ? 1 : -1)); } x0 = null; tocar(); });
+  ir(0); tocar();
+} else $('#banner').hidden = true;
+if (LOJA.instagram) $('#frase').insertAdjacentHTML('afterend', `<a href="https://instagram.com/${esc(LOJA.instagram)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;font-size:.88rem;font-weight:600;color:var(--suave);text-decoration:none">@${esc(LOJA.instagram)}</a>`);
+$('#avisoTeste').hidden = !LOJA.precosDeTeste;
+if (DP.faixas.length) $('#promo').innerHTML = `💸 <b>Compras ` + DP.faixas.slice().sort((a, b) => a.acima - b.acima).map(f => `acima de ${R(f.acima)}: ${pctTxt(f.porcento)} de desconto`).join(' · ') +
+  `</b> no ${esc(formasTxt())}${todosNoPix() ? '' : ` em ${esc(nomesPix())}`}.`;
+else $('#promo').hidden = true;
+$('#zap').href = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent('Olá, PSN! Vim pelo catálogo e tenho uma dúvida:')}`;
+$('#rodape').innerHTML = `PSN · Camada por camada${LOJA.instagram ? ` · <a href="https://instagram.com/${esc(LOJA.instagram)}" target="_blank" rel="noopener">@${esc(LOJA.instagram)}</a>` : ''}<br>Pedidos pelo WhatsApp`;
+render();
+atualizarCarrinho();
+</script>
+</body>
+</html>
