@@ -207,6 +207,13 @@ body{position:relative;z-index:0;overflow-x:hidden}
 .esc-prod.on{border-color:var(--roxo);background:#f4eefc}
 .esc-prod small{color:var(--roxo);font-weight:800}
 .esc-prod.sem{justify-content:center}
+.val.esg{opacity:.45;position:relative}
+.val.cor.esg::after{content:'';position:absolute;left:6px;right:6px;top:50%;border-top:2px solid #C62828;transform:rotate(-35deg)}
+.val small{font-size:.7rem;color:#C62828;font-weight:800}
+.esg-aviso{background:#FDE1E1;color:#7a1616;border-radius:12px;padding:10px 12px;font-size:.9rem;margin-top:8px;line-height:1.4}
+.esg-aviso .consultar,.add.consultar{display:inline-block;margin-top:6px;background:#25D366;color:#fff;font-weight:800;border-radius:999px;padding:8px 14px;text-decoration:none;text-align:center}
+.add.consultar{margin-top:0;flex:1}
+.esc-prod small.esg-txt{color:#C62828}
 .mini-foto{border-radius:12px;overflow:hidden;background:#FCF6EE;aspect-ratio:4/3;margin:2px 0 4px}
 .mini-foto img{width:100%;height:100%;object-fit:contain}
 .sem-ico{font-size:1.8rem;aspect-ratio:1/1;display:grid;place-items:center;width:100%}
@@ -263,7 +270,7 @@ footer a{color:var(--roxo);font-weight:700}
 </aside>
 <div id="toast"></div>
 
-<script src="dados.js?v=2026112208"></script>
+<script src="dados.js?v=2026112301"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
@@ -346,7 +353,7 @@ function cardHtml(p) {
     const sel = s.escolhas[o.nome];
     const temCor = o.valores.some(v => v.cor);
     return `<div><div class="op-nome">${esc(o.nome)}: <b>${sel != null ? esc(o.valores[sel].nome) : 'escolha'}</b></div><div class="valores">${o.valores.map((v, i) =>
-      `<button class="val ${temCor && !/bichinho/i.test(o.nome) ? 'cor' : ''} ${i === sel ? 'on' : ''}" data-a="opcao" data-o="${esc(o.nome)}" data-i="${i}" title="${esc(v.nome)}" aria-label="${esc(v.nome)}">${v.cor ? `<span class="bol" style="background:${v.cor}"></span>` : ''}${temCor ? '' : esc(v.nome)}</button>`).join('')}</div></div>`;
+      { const eg = esgOp(p, o.nome, v); return `<button class="val ${temCor && !/bichinho/i.test(o.nome) ? 'cor' : ''} ${i === sel ? 'on' : ''}${eg ? ' esg' : ''}" data-a="opcao" data-o="${esc(o.nome)}" data-i="${i}" title="${esc(v.nome)}${eg ? ' (esgotado)' : ''}" aria-label="${esc(v.nome)}${eg ? ' (esgotado)' : ''}">${v.cor ? `<span class="bol" style="background:${v.cor}"></span>` : ''}${temCor ? '' : esc(v.nome) + (eg ? ' <small>esgotado</small>' : '')}</button>`; }).join('')}</div></div>`;
   }).join('');
   if (p.tipo === 'nome') {
     const c = p.cores[s.combo];
@@ -357,14 +364,14 @@ function cardHtml(p) {
         <div class="desc" style="margin-top:4px">${esc(modeloDe(p).descricao || '')}</div></div>` : ''}
       <div><div class="op-nome">Nome ou palavra${ehLisa(p) ? ` (até ${maxLetras(p)} letras)` : ''}</div><input class="nome-in" data-nome maxlength="20" value="${esc(s.nome)}" placeholder="Digite aqui" autocomplete="off"></div>
       ${opsHtml()}
-      <div class="previa" data-previa>${previa(p)}</div>`;
+      <div class="previa" data-previa>${previa(p)}</div><div data-esg>${avisoEsgotado(p)}</div>`;
   } else {
     if (kit && fotos.length) { const fa = fotoDaCombinacao(p) || opcoesAtuais(p).map(o => s.escolhas[o.nome] != null ? o.valores[s.escolhas[o.nome]].foto : null).find(Boolean) || fotos[0];
       h += `<div class="mini-foto"><img src="fotos/${esc(fa)}" alt="${esc(p.nome)}"></div>`; }
-    h += opsHtml();
+    h += opsHtml() + `<div data-esg>${avisoEsgotado(p)}</div>`;
   }
   if (!kit) h += `<div class="rodape-card">${p.tipo === 'nome' ? '' : `<div class="qtd"><button data-a="qtd" data-d="-1" aria-label="Menos">−</button><span>${s.qtd}</span><button data-a="qtd" data-d="1" aria-label="Mais">+</button></div>`}
-    <button class="add" data-a="adicionar">${p.tipo === 'nome' ? 'Adicionar nome' : 'Adicionar'}</button></div>`;
+    ${produtoEsgotado(p) ? `<a class="add consultar" target="_blank" rel="noopener" href="${linkPrazo([p.nome])}">Esgotado · consultar prazo</a>` : `<button class="add" data-a="adicionar">${p.tipo === 'nome' ? 'Adicionar nome' : 'Adicionar'}</button>`}</div>`;
   return h + `</div></article>`;
 }
 /* modelo de caixeta escolhido (Ondulada = cor por letra; Lisa = peça única, uma cor só) */
@@ -461,8 +468,54 @@ function atualizarCard(p) {
 }
 
 /* ---------- monta o item a partir das escolhas (null se faltar algo) ---------- */
+
+/* ---------- esgotados: vêm do estoque (só a lista do que acabou, nunca quantidades) ---------- */
+let ESG = new Set();
+const nk = (...p) => p.map(x => String(x || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim()).join('|');
+function chaveEstoque(p, oNome, v) {
+  const id = p.base || p.id, o = nk(oNome);
+  if (id === 'clicker') return o === 'bichinho' ? nk('bichclick', v.nome) : nk('baldinhos', 'baldinho', v.est || v.nome);
+  if (id === 'cordao') return nk('cordinhas', 'cordinha', v.nome);
+  if (p.estLinha) return nk('bicharti', p.estLinha, v.est || v.nome);
+  if (id === 'chaveiro' && o === 'cor da caixeta' && !ehLisa(p)) return nk('caixetas', 'ondulada', v.nome);
+  return null;
+}
+/* bichinhos: aceita o nome do estoque começando igual (ex.: "Foquinha" e "Foquinha aviadora") */
+const temEsg = k => { if (ESG.has(k)) return true; const [c, l, co] = k.split('|'); if (c !== 'bicharti' || !l) return false;
+  for (const e of ESG) { const [c2, l2, co2] = e.split('|'); if (c2 === c && co2 === co && (l2.startsWith(l) || l.startsWith(l2))) return true; } return false; };
+const esgOp = (p, oNome, v) => { const k = chaveEstoque(p, oNome, v); return !!k && temEsg(k); };
+const produtoEsgotado = p => !!(p && p.estLinha && p.estCor && temEsg(nk('bicharti', p.estLinha, p.estCor)));
+function faltasDoItem(p) {
+  const s = st(p), f = [];
+  if (produtoEsgotado(p)) f.push(p.nome);
+  if (p.tipo === 'nome') {
+    const c = p.cores[s.combo], n = limparNome(s.nome).replace(/ /g, '');
+    if (c && c.est && n) { const ls = [...new Set(n.split('').filter(L => ESG.has(nk('letras', c.est, L))))]; if (ls.length) f.push(`letra${ls.length > 1 ? 's' : ''} ${ls.join(', ')} em ${c.nome.toLowerCase()}`); }
+    if (n && ehLisa(p)) { if (ESG.has(nk('caixetas', `lisa ${n.length} ${n.length === 1 ? 'lugar' : 'lugares'}`, 'preto'))) f.push(`caixeta lisa de ${n.length} lugares`); }
+    else if (n) { const op = caixetaOp(p); const cs = [...new Set(coresCaixeta(p).filter(ci => ci != null).map(ci => op.valores[ci]).filter(v => esgOp(p, op.nome, v)).map(v => v.nome))]; if (cs.length) f.push('caixeta ' + cs.join(', ')); }
+  } else for (const o of opcoesAtuais(p)) {
+    const i = s.escolhas[o.nome]; if (i == null || !esgOp(p, o.nome, o.valores[i])) continue;
+    const v = o.valores[i].nome; f.push(/cordinha/i.test(o.nome) ? 'cordinha ' + v : o.nome === 'Cor' ? p.nome + ' ' + v.toLowerCase() : o.nome.toLowerCase() + ' ' + v);
+  }
+  return f;
+}
+const linkPrazo = itens => `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent('Olá, PSN! Quero saber o prazo de: ' + itens.join(', '))}`;
+function avisoEsgotado(p) {
+  const f = faltasDoItem(p);
+  return f.length ? `<div class="esg-aviso">Esgotado no momento: <b>${esc(f.join(', '))}</b>.<br><a class="consultar" target="_blank" rel="noopener" href="${linkPrazo(f)}">Consultar prazo no WhatsApp</a></div>` : '';
+}
+async function carregarEsgotados() {
+  try {
+    const r = await fetch('https://firestore.googleapis.com/v1/projects/psn-estoque/databases/(default)/documents/publico/catalogo', { cache: 'no-store' });
+    if (!r.ok) return;
+    const j = await r.json(), vals = ((j.fields || {}).esgotados || {}).arrayValue;
+    ESG = new Set(((vals && vals.values) || []).map(x => x.stringValue));
+    render(); if (kitAtual && $('#kitModal').classList.contains('on')) desenharKit();
+  } catch (e) { /* sem internet ou sem lista: tudo aparece disponível */ }
+}
 function montarItem(p) {
   const s = st(p);
+  { const f = faltasDoItem(p); if (f.length) { toast('Esgotado no momento: ' + f.join(', ') + '. Consulte o prazo no WhatsApp 💜'); return null; } }
   if (p.tipo === 'nome') {
     const n = limparNome(s.nome).trim().replace(/\s+/g, ' '), qtdL = n.replace(/ /g, '').length;
     if (!qtdL) { toast('Digite o nome primeiro 😉'); const i = document.querySelector(`.card[data-p="${p.id}"] [data-nome]`); if (i) i.focus(); return null; }
@@ -521,7 +574,7 @@ function pecaKitHtml(pc) {
   return `<article class="card mini" data-escolha="${pc.i}"><div class="corpo"><div class="kit-rot">${esc(pc.rot)}</div><h3>${esc(pc.rotulo)}</h3>
     <div class="escolhas">${pc.opcional ? `<button class="esc-prod sem ${pc.escolhido === '' ? 'on' : ''}" data-a="escolherKit" data-i="${pc.i}" data-pid=""><span class="sem-ico">🚫</span><span>${esc(pc.sem || 'Não, só o chaveiro')}</span></button>` : ''}
       ${pc.opcoes.map(id => { const b = prod(id); return `<button class="esc-prod ${pc.escolhido === id ? 'on' : ''}" data-a="escolherKit" data-i="${pc.i}" data-pid="${id}">
-      ${b.fotos && b.fotos[0] ? `<img src="fotos/${esc(b.fotos[0])}" alt="">` : ''}<span>${esc(b.nome)}</span>${pc.extra ? `<small>+ ${esc(pc.extra)}</small>` : pc.opcional ? `<small>+ ${R(b.preco)}</small>` : ''}</button>`; }).join('')}</div>
+      ${b.fotos && b.fotos[0] ? `<img src="fotos/${esc(b.fotos[0])}" alt="">` : ''}<span>${esc(b.nome)}</span>${produtoEsgotado(b) ? '<small class="esg-txt">esgotado</small>' : pc.extra ? `<small>+ ${esc(pc.extra)}</small>` : pc.opcional ? `<small>+ ${R(b.preco)}</small>` : ''}</button>`; }).join('')}</div>
     ${pc.p ? `<div class="esc-config"${(pc.p.opcoes || []).length || pc.p.tipo === 'nome' ? '' : ' hidden'}>${cardHtml(pc.p)}</div>` : ''}</div></article>`;
 }
 function desenharKit() {
@@ -696,6 +749,7 @@ document.addEventListener('input', e => {
     if (limpo !== t.value.toUpperCase()) { const pos = t.selectionStart; t.value = limpo; t.setSelectionRange(pos, pos); }
     s.nome = limpo;
     t.closest('.card').querySelector('[data-previa]').innerHTML = previa(p);
+    { const e2 = t.closest('.card').querySelector('[data-esg]'); if (e2) e2.innerHTML = avisoEsgotado(p); }
     if (p.kitDe) atualizarKitFim();
   }
 });
@@ -731,6 +785,7 @@ $('#zap').href = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent('Olá
 $('#rodape').innerHTML = `PSN · Camada por camada${LOJA.instagram ? ` · <a href="https://instagram.com/${esc(LOJA.instagram)}" target="_blank" rel="noopener">@${esc(LOJA.instagram)}</a>` : ''}<br>Pedidos pelo WhatsApp`;
 render();
 atualizarCarrinho();
+carregarEsgotados();
 </script>
 </body>
 </html>

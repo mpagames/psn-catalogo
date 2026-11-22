@@ -41,12 +41,12 @@ const PRODUTOS = [
     fotos: ["letrinhas-rosa-com-letra-dourada.jpg", "letrinhas-rosa-com-letra-azul.jpg", "letrinhas-amarelo-com-letra-azul.jpg", "letrinhas-verde-com-letra-rosa.jpg", "letrinhas-lilas-com-letra-dourada.jpg", "letrinhas-preto-com-letra-azul.jpg", "caixeta-rosa.jpg", "caixeta-rosa-perolado.jpg", "caixeta-lilas.jpg", "caixeta-roxo.jpg", "caixeta-violeta.jpg", "caixeta-azul-claro-1.jpg", "caixeta-azul-claro-2.jpg", "caixeta-azul-metalico.jpg", "caixeta-turquesa.jpg", "caixeta-verde.jpg", "caixeta-amarelo-claro.jpg", "caixeta-amarelo.jpg", "caixeta-laranja.jpg", "caixeta-branco.jpg", "caixeta-preto.jpg", "caixeta-lisa-pedro.jpg", "chaveiro-ana.jpg", "kit-helena.jpg"],
     // cores da letrinha (teclinha + letra em relevo)
     cores: [
-      {"nome": "Rosa com letra dourada", "base": "#F0B2D2", "letra": "#D9A21B", "foto": "letrinhas-rosa-com-letra-dourada.jpg"},
-      {"nome": "Rosa com letra azul lavanda", "base": "#F0B2D2", "letra": "#C9CBF0", "foto": "letrinhas-rosa-com-letra-azul.jpg"},
-      {"nome": "Amarelo pastel com letra azul", "base": "#EFEB9E", "letra": "#2F55C9", "foto": "letrinhas-amarelo-com-letra-azul.jpg"},
-      {"nome": "Verde limão com letra rosa", "base": "#A6E6B2", "letra": "#E8559A", "foto": "letrinhas-verde-com-letra-rosa.jpg"},
-      {"nome": "Azul lavanda com letra dourada", "base": "#C9CBF0", "letra": "#D9A21B", "foto": "letrinhas-lilas-com-letra-dourada.jpg"},
-      {"nome": "Preto com letra azul", "base": "#2A2A2A", "letra": "#3D6BFF", "foto": "letrinhas-preto-com-letra-azul.jpg"}
+      {"nome": "Rosa com letra dourada", "est": "Rosa / Dourado", "base": "#F0B2D2", "letra": "#D9A21B", "foto": "letrinhas-rosa-com-letra-dourada.jpg"},
+      {"nome": "Rosa com letra azul lavanda", "est": "Rosa / Azul lavanda", "base": "#F0B2D2", "letra": "#C9CBF0", "foto": "letrinhas-rosa-com-letra-azul.jpg"},
+      {"nome": "Amarelo pastel com letra azul", "est": "Amarelo pastel / Azul", "base": "#EFEB9E", "letra": "#2F55C9", "foto": "letrinhas-amarelo-com-letra-azul.jpg"},
+      {"nome": "Verde limão com letra rosa", "est": "Verde limão / Rosa", "base": "#A6E6B2", "letra": "#E8559A", "foto": "letrinhas-verde-com-letra-rosa.jpg"},
+      {"nome": "Azul lavanda com letra dourada", "est": "Azul lavanda / Dourado", "base": "#C9CBF0", "letra": "#D9A21B", "foto": "letrinhas-lilas-com-letra-dourada.jpg"},
+      {"nome": "Preto com letra azul", "est": "Preto / Azul", "base": "#2A2A2A", "letra": "#3D6BFF", "foto": "letrinhas-preto-com-letra-azul.jpg"}
     ],
     // modelos de caixeta: Ondulada (cor por letra, usa a "Cor da caixeta" abaixo) e Lisa (peça única, uma cor, até 10 letras). Mesmo preço.
     modelos: [
@@ -104,34 +104,34 @@ const PRODUTOS = [
     fotosCombo: {"Pinguim|Branco": "pinguim-baldinho-branco-2.jpg", "Pinguim|Amarelo pastel": "pinguim-baldinho-amarelo.jpg", "Pinguim|Rosa": "pinguim-baldinho-rosa.jpg", "Pinguim|Bege": "pinguim-baldinho-bege.jpg", "Pinguim|Azul pastel": "pinguim-baldinho-verde-agua.jpg", "Pinguim|Verde pastel": "pinguim-baldinho-verde-claro.jpg", "Pinguim|Azul lavanda": "pinguim-baldinho-lavanda.jpg", "Pinguim|Lilás": "pinguim-baldinho-lilas.jpg", "Pinguim|Lilás rosa": "pinguim-baldinho-lilas-rosado.jpg", "Raposinha|Branco": "raposinha-baldinho-branco.jpg", "Raposinha|Amarelo pastel": "raposinha-baldinho-amarelo.jpg", "Raposinha|Rosa": "raposinha-baldinho-rosa.jpg", "Raposinha|Bege": "raposinha-baldinho-bege-2.jpg", "Raposinha|Azul pastel": "raposinha-baldinho-verde-agua.jpg", "Raposinha|Verde pastel": "raposinha-baldinho-verde-claro.jpg", "Raposinha|Azul lavanda": "raposinha-baldinho-lavanda.jpg", "Raposinha|Lilás": "raposinha-baldinho-lilas.jpg", "Raposinha|Lilás rosa": "raposinha-baldinho-lilas-rosado.jpg", "Coelhinho|Branco": "clk-coelhinho-branco.jpg", "Coelhinho|Amarelo pastel": "clk-coelhinho-amarelo.jpg", "Coelhinho|Rosa": "clk-coelhinho-rosa.jpg", "Coelhinho|Bege": "clk-coelhinho-bege.jpg", "Coelhinho|Azul pastel": "clk-coelhinho-verde-agua.jpg", "Coelhinho|Verde pastel": "clk-coelhinho-verde-claro.jpg", "Coelhinho|Azul lavanda": "clk-coelhinho-lavanda.jpg", "Coelhinho|Lilás": "clk-coelhinho-lilas.jpg", "Coelhinho|Lilás rosa": "clk-coelhinho-lilas-rosado.jpg", "Sapinho|Branco": "sapinho-baldinho-branco.jpg", "Sapinho|Amarelo pastel": "sapinho-baldinho-amarelo.jpg", "Sapinho|Rosa": "sapinho-baldinho-rosa.jpg", "Sapinho|Bege": "sapinho-baldinho-bege.jpg", "Sapinho|Azul pastel": "sapinho-baldinho-verde-agua.jpg", "Sapinho|Verde pastel": "sapinho-baldinho-verde-claro.jpg", "Sapinho|Azul lavanda": "sapinho-baldinho-lavanda.jpg", "Sapinho|Lilás": "sapinho-baldinho-lilas.jpg", "Sapinho|Lilás rosa": "sapinho-baldinho-lilas-rosado.jpg", "Lobo|Branco": "lobo-baldinho-branco.jpg", "Lobo|Amarelo pastel": "lobo-baldinho-amarelo.jpg", "Lobo|Rosa": "lobo-baldinho-rosa.jpg", "Lobo|Bege": "lobo-baldinho-bege.jpg", "Lobo|Azul pastel": "lobo-baldinho-verde-agua.jpg", "Lobo|Verde pastel": "lobo-baldinho-verde-claro.jpg", "Lobo|Azul lavanda": "lobo-baldinho-lavanda.jpg", "Lobo|Lilás": "lobo-baldinho-lilas.jpg", "Lobo|Lilás rosa": "lobo-baldinho-lilas-rosado.jpg", "Urso branco|Branco": "urso-branco-baldinho-branco.jpg", "Urso branco|Amarelo pastel": "urso-branco-baldinho-amarelo.jpg", "Urso branco|Rosa": "urso-branco-baldinho-rosa.jpg", "Urso branco|Bege": "urso-branco-baldinho-bege.jpg", "Urso branco|Azul pastel": "urso-branco-baldinho-verde-agua.jpg", "Urso branco|Verde pastel": "urso-branco-baldinho-verde-claro.jpg", "Urso branco|Azul lavanda": "urso-branco-baldinho-lavanda.jpg", "Urso branco|Lilás": "urso-branco-baldinho-lilas.jpg", "Urso branco|Lilás rosa": "urso-branco-baldinho-lilas-rosado.jpg", "Urso creme|Branco": "urso-creme-baldinho-branco.jpg", "Urso creme|Amarelo pastel": "urso-creme-baldinho-amarelo.jpg", "Urso creme|Rosa": "urso-creme-baldinho-rosa.jpg", "Urso creme|Bege": "urso-creme-baldinho-bege.jpg", "Urso creme|Azul pastel": "urso-creme-baldinho-verde-agua.jpg", "Urso creme|Verde pastel": "urso-creme-baldinho-verde-claro.jpg", "Urso creme|Azul lavanda": "urso-creme-baldinho-lavanda.jpg", "Urso creme|Lilás": "urso-creme-baldinho-lilas.jpg", "Urso creme|Lilás rosa": "urso-creme-baldinho-lilas-rosado.jpg"}
   },
   {
-    id: 'gatinho', cat: 'articulados', descontoPix: true, formato: 'retrato',
+    id: 'gatinho', cat: 'articulados', descontoPix: true, formato: 'retrato', estLinha: 'Gatinho',
     nome: 'Gatinho articulado',
     descricao: 'Gatinho com chifrinho, todo articulado: mexe patinhas, corpo e rabo.',
     preco: 15,
     fotos: ["artic-gatinho-azul-2.jpg", "artic-gatinho-azul-3.jpg", "artic-gatinho-rosa-1.jpg", "artic-gatinho-rosa-2.jpg"],
-    opcoes: [{ nome: 'Cor', valores: [{ "nome": "Azul", "cor": "#BFE6E6", "foto": "artic-gatinho-azul-2.jpg" }, { "nome": "Rosa", "cor": "#F4B6CF", "foto": "artic-gatinho-rosa-1.jpg" }] }]
+    opcoes: [{ nome: 'Cor', valores: [{ "nome": "Azul", "est": "Azul claro", "cor": "#BFE6E6", "foto": "artic-gatinho-azul-2.jpg" }, { "nome": "Rosa", "cor": "#F4B6CF", "foto": "artic-gatinho-rosa-1.jpg" }] }]
   },
   {
-    id: 'dalmata', cat: 'articulados', descontoPix: true, formato: 'retrato',
+    id: 'dalmata', cat: 'articulados', descontoPix: true, formato: 'retrato', estLinha: 'Dálmata bombeiro', estCor: 'Vermelho',
     nome: 'Dálmata bombeiro',
     descricao: 'Filhote de dálmata com capacete e roupa de bombeiro, articulado.',
     preco: 15,
     fotos: ["artic-dalmata-bombeiro-1.jpg", "artic-dalmata-bombeiro-2.jpg"],
   },
   {
-    id: 'foquinha', cat: 'articulados', descontoPix: true, formato: 'retrato',
+    id: 'foquinha', cat: 'articulados', descontoPix: true, formato: 'retrato', estLinha: 'Foquinha', estCor: 'Cinza',
     nome: 'Foquinha aviadora',
     descricao: 'Foquinha com gorro e óculos de aviador, toda articulada.',
     preco: 15,
     fotos: ["artic-foquinha-aviadora-1.jpg", "artic-foquinha-aviadora-2.jpg"],
   },
   {
-    id: 'hipopotamo', cat: 'articulados', descontoPix: true, formato: 'retrato',
+    id: 'hipopotamo', cat: 'articulados', descontoPix: true, formato: 'retrato', estLinha: 'Hipopótamo',
     nome: 'Hipopótamo',
     descricao: 'Hipopótamo articulado de olhões, anda, deita e faz pose. Escolha a cor.',
     preco: 15,
     fotos: ["artic-hipopotamo-azul-1.jpg", "artic-hipopotamo-azul-2.jpg", "artic-hipopotamo-marrom-1.jpg", "artic-hipopotamo-marrom-2.jpg"],
-    opcoes: [{ nome: 'Cor', valores: [{ "nome": "Azul", "cor": "#BFE3E0", "foto": "artic-hipopotamo-azul-1.jpg" }, { "nome": "Marrom", "cor": "#8A5530", "foto": "artic-hipopotamo-marrom-1.jpg" }] }]
+    opcoes: [{ nome: 'Cor', valores: [{ "nome": "Azul", "est": "Azul claro", "cor": "#BFE3E0", "foto": "artic-hipopotamo-azul-1.jpg" }, { "nome": "Marrom", "cor": "#8A5530", "foto": "artic-hipopotamo-marrom-1.jpg" }] }]
   },
   {
     id: 'cordao', cat: 'cordoes', oculto: true, formato: 'retrato',   // oculto = não aparece sozinho no catálogo, só dentro do kit
