@@ -183,7 +183,7 @@ const PRODUTOS = [
       { nome: 'Com manjedoura', foto: 'natal-presepio-sagrada-familia-frente.jpg' },
       { nome: 'Em pé, com o Menino no colo', foto: 'sagrada-familia-em-pe-1.jpg' }
     ] }],
-    fotos: ["natal-presepio-sagrada-familia-frente.jpg", "sagrada-familia-em-pe-1.jpg", "natal-presepio-sagrada-familia-costas.jpg", "sagrada-familia-em-pe-3.jpg"]
+    fotos: ["natal-presepio-sagrada-familia-frente.jpg", "sagrada-familia-em-pe-1.jpg", "natal-presepio-sagrada-familia-costas.jpg"]
   }
 ];
 
