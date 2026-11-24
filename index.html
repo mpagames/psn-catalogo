@@ -270,7 +270,7 @@ footer a{color:var(--roxo);font-weight:700}
 </aside>
 <div id="toast"></div>
 
-<script src="dados.js?v=2026112301"></script>
+<script src="dados.js?v=2026112302"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
@@ -312,8 +312,10 @@ const pctTxt = v => String(v).replace('.', ',') + '%';
 function faixaPara(valor) { let f = null; for (const x of DP.faixas) if (valor > x.acima && (!f || x.porcento > f.porcento)) f = x; return f; }
 function proximaFaixa(valor) { return DP.faixas.filter(x => x.acima >= valor).sort((a, b) => a.acima - b.acima)[0] || null; }
 const entraNoPix = x => x.kit ? !!DP.valeParaKits : !!(prod(x.pid) && prod(x.pid).descontoPix);
+/* peças com preço próprio no Pix/dinheiro (precoPix): o valor muda conforme a forma de pagamento */
+const unitDe = x => x.unitPix != null && DP.formas.includes(cliente.pag || DP.formas[0] || 'Pix') ? x.unitPix : x.unit;
 function contas() {
-  const sub = carrinho.reduce((s, x) => s + x.unit * x.qtd, 0);
+  const sub = carrinho.reduce((s, x) => s + unitDe(x) * x.qtd, 0);
   const base = carrinho.filter(entraNoPix).reduce((s, x) => s + x.unit * x.qtd, 0);
   const f = faixaPara(base), prox = proximaFaixa(base);
   const pag = cliente.pag || DP.formas[0] || 'Pix';
@@ -348,7 +350,8 @@ function cardHtml(p) {
       <div class="pontos">${fotos.length > 8 ? `<span class="cont">${s.foto + 1}/${fotos.length}</span>` : fotos.map((_, i) => `<i class="${i === s.foto ? 'on' : ''}"></i>`).join('')}</div>` : ''}</div>
     <div class="corpo"><h3>${esc(p.nome)}</h3><p class="desc">${esc(p.descricao || '')}</p>`;
   h += kit ? (p.tipo === 'nome' ? `<div class="desc">1 letra inclusa no kit · <b>+ ${R(p.kitLetraAdicional)}</b> cada letra a mais</div>` : '')
-    : p.preco == null ? `<div class="preco consulta">Preço sob consulta</div>` : `<div class="preco">${R(p.preco)} <small>/${esc(p.unidade || 'un.')}</small></div>`;
+    : p.preco == null ? `<div class="preco consulta">Preço sob consulta</div>` : p.precoPix != null ? `<div class="preco">${R(p.precoPix)} <small>no ${esc(formasTxt())}</small></div><div class="desc">ou <b>${R(p.preco)}</b> no cartão</div>`
+    : `<div class="preco">${R(p.preco)} <small>/${esc(p.unidade || 'un.')}</small></div>`;
   const opsHtml = () => opcoesAtuais(p).map(o => {
     const sel = s.escolhas[o.nome];
     const temCor = o.valores.some(v => v.cor);
@@ -531,7 +534,7 @@ function montarItem(p) {
   for (const o of p.opcoes || []) if (s.escolhas[o.nome] == null) { toast(`${p.kitRotulo ? p.kitRotulo + ': e' : 'E'}scolha ${o.nome.toLowerCase()}`); return null; }
   const det = (p.opcoes || []).map(o => `${o.nome}: ${o.valores[s.escolhas[o.nome]].nome}`).join(' · ');
   const fotoOp = fotoDaCombinacao(p) || (p.opcoes || []).map(o => o.valores[s.escolhas[o.nome]].foto).find(Boolean);
-  return { pid: p.base || p.id, nome: p.nome, detalhe: det, qtd: p.kitDe ? 1 : s.qtd, unit: p.preco ?? 0, consulta: p.preco == null, foto: fotoOp || p.fotos[0] };
+  return { pid: p.base || p.id, nome: p.nome, detalhe: det, qtd: p.kitDe ? 1 : s.qtd, unit: p.preco ?? 0, unitPix: p.precoPix ?? null, consulta: p.preco == null, foto: fotoOp || p.fotos[0] };
 }
 function adicionar(p) {
   const item = montarItem(p); if (!item) return;
@@ -640,9 +643,9 @@ function atualizarCarrinho() {
   $('#barraT').textContent = R(c.total);
   $('#itens').innerHTML = carrinho.length ? carrinho.map((x, i) => `<div class="item">${x.foto ? `<img src="fotos/${esc(x.foto)}" alt="">` : ''}
     <div class="info"><b>${x.kit ? '🎁 ' : ''}${esc(x.nome)}</b>${x.kit ? `<small>Vem: ${esc((x.inclui || []).join(', '))}</small>` + x.partes.map(pt => `<small>• ${esc(pt.nome)}${pt.detalhe ? ' — ' + esc(pt.detalhe) : ''}</small>`).join('') + `<small>${esc(contaKit(x))}</small>`
-      : `<small>${esc(x.detalhe)}</small><small>${x.consulta ? 'preço sob consulta' : `${x.letras ? `${x.letras} letras · ` : ''}${R(x.unit)} cada`}</small>`}</div>
+      : `<small>${esc(x.detalhe)}</small><small>${x.consulta ? 'preço sob consulta' : `${x.letras ? `${x.letras} letras · ` : ''}${R(unitDe(x))} cada${x.unitPix != null ? (unitDe(x) === x.unitPix ? ` (no cartão: ${R(x.unit)})` : ` (no ${esc(formasTxt())}: ${R(x.unitPix)})`) : ''}`}</small>`}</div>
     <div class="lado"><div class="qtd"><button data-a="cqtd" data-i="${i}" data-d="-1" aria-label="Menos">−</button><span>${x.qtd}</span><button data-a="cqtd" data-i="${i}" data-d="1" aria-label="Mais">+</button></div>
-    <b>${x.consulta ? 'a combinar' : R(x.unit * x.qtd)}</b><button class="remover" data-a="remover" data-i="${i}">remover</button></div></div>`).join('')
+    <b>${x.consulta ? 'a combinar' : R(unitDe(x) * x.qtd)}</b><button class="remover" data-a="remover" data-i="${i}">remover</button></div></div>`).join('')
     : `<div class="vazio-carr"><div style="font-size:3rem">🛒</div><p>Seu carrinho está vazio.<br>Escolha suas peças e toque em <b>Adicionar</b>.</p></div>`;
   $('#fim').innerHTML = carrinho.length ? `<div id="resumo"></div>
     <label class="campo">Forma de pagamento<select id="cPag">${['Pix', 'Dinheiro', 'Cartão de crédito', 'Cartão de débito'].map(o => `<option ${c.pag === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>
@@ -665,7 +668,7 @@ function atualizarResumo() {
   }
   h += `<div class="total"><span>Total</span><span>${R(c.total)}</span></div>`;
   if (carrinho.some(x => x.consulta)) h += `<div class="promo-mini" style="background:#FFF1BF;color:#5b4300">Alguns itens têm <b>preço sob consulta</b>: o valor deles é combinado no WhatsApp e não está no total.</div>`;
-  if (c.sub > 0) h += avisoDesconto();
+  if (c.base > 0) h += avisoDesconto();
   el.innerHTML = h;
   $('#barraT').textContent = R(c.total);
 }
@@ -682,7 +685,7 @@ function mensagem() {
       return;
     }
     m += `${i + 1}) ${x.nome}${x.detalhe ? ' — ' + x.detalhe : ''}\n`;
-    m += x.consulta ? `   ${x.qtd} × (preço sob consulta)\n` : x.letras ? `   ${x.qtd > 1 ? x.qtd + ' chaveiros × ' : ''}${x.letras} letras (caixeta + letrinha) × ${R(x.unit / x.letras)} = ${R(x.unit * x.qtd)}\n` : `   ${x.qtd} × ${R(x.unit)} = ${R(x.unit * x.qtd)}\n`;
+    m += x.consulta ? `   ${x.qtd} × (preço sob consulta)\n` : x.letras ? `   ${x.qtd > 1 ? x.qtd + ' chaveiros × ' : ''}${x.letras} letras (caixeta + letrinha) × ${R(x.unit / x.letras)} = ${R(x.unit * x.qtd)}\n` : `   ${x.qtd} × ${R(unitDe(x))} = ${R(unitDe(x) * x.qtd)}${x.unitPix != null ? (unitDe(x) === x.unitPix ? ` (preço ${formasTxt()})` : ' (preço cartão)') : ''}\n`;
   });
   m += `\nSubtotal: ${R(c.sub)}\n`;
   if (c.vale) m += `Desconto ${c.pag} (${pctTxt(c.f.porcento)} em ${R(c.base)}): − ${R(c.desc)}\n`;
@@ -738,7 +741,7 @@ document.addEventListener('click', e => {
   }
 });
 const camposCli = { cNome: 'nome', cEntrega: 'entrega', cCidade: 'cidade', cObs: 'obs', cPag: 'pag' };
-function guardarCampo(t) { if (camposCli[t.id]) { cliente[camposCli[t.id]] = t.value.trim(); salvarCli(); if (t.id === 'cPag') atualizarResumo(); } }
+function guardarCampo(t) { if (camposCli[t.id]) { cliente[camposCli[t.id]] = t.value.trim(); salvarCli(); if (t.id === 'cPag') atualizarCarrinho(); } }
 document.addEventListener('input', e => {
   const t = e.target;
   if (t.id === 'busca') { busca = t.value; render(); if (busca) document.getElementById('pecas').scrollIntoView({ block: 'start' }); return; }

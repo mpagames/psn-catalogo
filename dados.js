@@ -163,21 +163,27 @@ const PRODUTOS = [
     ] }]
   },
   {
-    // preco: null = "preço sob consulta". Pendente: árvore de Natal (ainda não impressa) e talvez vela junto.
+    // preco = cartão; precoPix = Pix ou dinheiro
     id: 'kit-natal', cat: 'natal-kits', formato: 'retrato',
-    nome: 'Kit Natal Sagrada Família',
-    descricao: 'Sagrada Família (José, Maria e o Menino Jesus na manjedoura) com bandeja e porta-velas canelado, nas cores bege e marrom. Lindo para a decoração de Natal.',
-    preco: null,
-    fotos: ["natal-presepio-sagrada-familia-frente.jpg", "natal-presepio-sagrada-familia-costas.jpg", "natal-porta-velas-1.jpg", "natal-porta-velas-2.jpg", "natal-sagrada-familia.jpg"]
-  }
-,
+    nome: 'Kit de Natal',
+    descricao: 'Kit completo: Sagrada Família em bege, árvore de Natal verde com estrela dourada, porta-velas canelado com velinha de LED e bandeja marrom. Escolha o modelo da Sagrada Família.',
+    preco: 120, precoPix: 100,
+    opcoes: [{ nome: 'Sagrada Família', valores: [
+      { nome: 'Com manjedoura', foto: 'natal-kit-2.jpg' },
+      { nome: 'Em pé, com o Menino no colo', foto: 'natal-kit-1.jpg' }
+    ] }],
+    fotos: ["natal-kit-1.jpg", "natal-kit-2.jpg", "natal-kit-3.jpg", "natal-kit-4.jpg"]
+  },
   {
-    // preco: null = "preço sob consulta"
-    id: 'sagrada-familia-pe', cat: 'natal-kits', formato: 'retrato',
-    nome: 'Sagrada Família em pé',
-    descricao: 'José e Maria abraçados com o Menino Jesus no colo, em bege. Uma peça delicada para o Natal.',
-    preco: null,
-    fotos: ["sagrada-familia-em-pe-1.jpg", "sagrada-familia-em-pe-3.jpg"]
+    id: 'sagrada-familia', cat: 'natal-kits', formato: 'retrato',
+    nome: 'Sagrada Família',
+    descricao: 'José, Maria e o Menino Jesus, em bege. Uma peça delicada para o Natal, em dois modelos: com manjedoura ou em pé, com o Menino no colo.',
+    preco: 30, precoPix: 25,
+    opcoes: [{ nome: 'Modelo', valores: [
+      { nome: 'Com manjedoura', foto: 'natal-presepio-sagrada-familia-frente.jpg' },
+      { nome: 'Em pé, com o Menino no colo', foto: 'sagrada-familia-em-pe-1.jpg' }
+    ] }],
+    fotos: ["natal-presepio-sagrada-familia-frente.jpg", "sagrada-familia-em-pe-1.jpg", "natal-presepio-sagrada-familia-costas.jpg", "sagrada-familia-em-pe-3.jpg"]
   }
 ];
 
