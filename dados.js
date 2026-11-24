@@ -16,7 +16,7 @@ const LOJA = {
    emBreve: true = a aba aparece com um aviso "em breve" enquanto não tiver produtos. */
 const SECOES = [
   { id: 'chaveiros', nome: 'Monte seu chaveiro', icone: '🔑', capa: 'capa-chaveiros.jpg' },
-  { id: 'natal', nome: 'Especial de Natal', icone: '🎄', capa: 'capa-natal.jpg' },
+  { id: 'natal', nome: 'Especial de Natal', icone: '🎄', capa: 'capa-natal-2.jpg' },
   { id: 'religiosos', nome: 'Religiosos', icone: '🙏', emBreve: true,
     textoEmBreve: 'Estamos preparando imagens religiosas impressas em 3D. Quer ser avisado(a) quando chegarem?' }
 ];
@@ -212,10 +212,10 @@ const FOTOS_INTEIRAS = ['kit-helena.jpg', 'kit-m-azul.jpg', 'natal-*', 'sagrada-
 
 /* Banner do topo: as capas passam sozinhas. Tocar leva para as peças daquele grupo. */
 const BANNER = [
+  { nome: 'Especial de Natal', frase: 'Sagrada Família e decoração, feitas camada por camada.', capa: 'capa-natal-2.jpg', fundo: '#F7EDC4', secao: 'natal' },
   { nome: 'Monte seu chaveiro', frase: 'Seu nome em letrinhas 3D, nas cores que você quiser.', capa: 'capa-chaveiros.jpg', fundo: '#EADDF8', secao: 'chaveiros', filtro: 'kits' },
   { nome: 'Bichinhos clickers', frase: 'Bichinhos fofos que fazem “clique” dentro do baldinho.', capa: 'capa-clickers.jpg', fundo: '#D6F0DC', secao: 'chaveiros', filtro: 'clickers' },
-  { nome: 'Bichinhos articulados', frase: 'Mexem as patinhas, o corpo e o rabinho.', capa: 'capa-articulados.jpg', fundo: '#F9DDE9', secao: 'chaveiros', filtro: 'articulados' },
-  { nome: 'Especial de Natal', frase: 'Sagrada Família e decoração, feitas camada por camada.', capa: 'capa-natal.jpg', fundo: '#F7EDC4', secao: 'natal' }
+  { nome: 'Bichinhos articulados', frase: 'Mexem as patinhas, o corpo e o rabinho.', capa: 'capa-articulados.jpg', fundo: '#F9DDE9', secao: 'chaveiros', filtro: 'articulados' }
 ];
 
 const KITS = [

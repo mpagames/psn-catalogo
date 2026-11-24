@@ -76,6 +76,13 @@ body{position:relative;z-index:0;overflow-x:hidden}
 .banner .foto{aspect-ratio:3/2;border-radius:18px;overflow:hidden;background:#FCF3EA}
 .banner .foto img{width:100%;height:100%;object-fit:cover;object-position:center 55%}
 .banner .pontos-b{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:7px}
+.banner .seta-b{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--roxo);font-size:1.7rem;line-height:1;font-weight:800;cursor:pointer;display:none;place-items:center;padding:0 0 4px;box-shadow:0 3px 12px rgba(46,26,71,.2);transition:background .2s,color .2s}
+.banner .seta-b:hover{background:var(--roxo);color:#fff}
+.banner .seta-b.ant{left:14px}.banner .seta-b.prox{right:14px}
+@media(min-width:641px){.banner .seta-b{display:grid}.banner .slide{padding-left:78px;padding-right:78px}}
+.banner .trilho.arrastando{transition:none}.banner .trilho.arrastando .slide{cursor:grabbing}
+.banner .slide{user-select:none;-webkit-user-select:none}.banner .slide img{-webkit-user-drag:none;pointer-events:none}
+.banner .pontos-b button{position:relative;cursor:pointer}.banner .pontos-b button::after{content:'';position:absolute;inset:-10px -4px}
 .banner .pontos-b button{width:9px;height:9px;border-radius:50%;border:0;padding:0;background:rgba(46,26,71,.25)}
 .banner .pontos-b button.on{background:var(--roxo);width:22px;border-radius:9px}
 @media(max-width:640px){.banner .slide{grid-template-columns:1fr;padding:12px 12px 30px}.banner .foto{order:-1}.banner .txt p{margin-bottom:12px}}
@@ -270,7 +277,7 @@ footer a{color:var(--roxo);font-weight:700}
 </aside>
 <div id="toast"></div>
 
-<script src="dados.js?v=2026112303"></script>
+<script src="dados.js?v=2026112402"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
@@ -769,11 +776,29 @@ if (typeof BANNER !== 'undefined' && BANNER.length) {
   bn.innerHTML = `<div class="trilho">${BANNER.map((b, i) => `<button class="slide" data-a="banner" data-i="${i}" style="background:${esc(b.fundo || '#EADDF8')}" aria-label="${esc(b.nome)}">
       <div class="txt"><h2>${esc(b.nome)}</h2><p>${esc(b.frase || '')}</p><span>Ver peças</span></div>
       <div class="foto"><img src="fotos/${esc(b.capa)}" alt="" ${i ? 'loading="lazy"' : ''}></div></button>`).join('')}</div>
-    <div class="pontos-b">${BANNER.map((_, i) => `<button data-ir="${i}" aria-label="Destaque ${i + 1}"></button>`).join('')}</div>`;
+    <div class="pontos-b">${BANNER.map((_, i) => `<button data-ir="${i}" aria-label="Destaque ${i + 1}"></button>`).join('')}</div>${BANNER.length > 1 ? '<button class="seta-b ant" data-passo="-1" aria-label="Destaque anterior">‹</button><button class="seta-b prox" data-passo="1" aria-label="Próximo destaque">›</button>' : ''}`;
+  const trilho = bn.querySelector('.trilho');
   const ir = i => { atual = (i + BANNER.length) % BANNER.length; bn.querySelector('.trilho').style.transform = `translateX(-${atual * 100}%)`;
-    bn.querySelectorAll('.pontos-b button').forEach((p, j) => p.classList.toggle('on', j === atual)); };
+    bn.querySelectorAll('.pontos-b button').forEach((p, j) => p.classList.toggle('on', j === atual));
+    bn.querySelectorAll('.slide').forEach((s, j) => { s.tabIndex = j === atual ? 0 : -1; }); };
   const tocar = () => { clearInterval(timer); timer = setInterval(() => ir(atual + 1), 5000); };
   bn.addEventListener('click', e => { const p = e.target.closest('[data-ir]'); if (p) { e.stopPropagation(); ir(+p.dataset.ir); tocar(); } }, true);
+  bn.addEventListener('click', e => { const p = e.target.closest('[data-passo]'); if (p) { e.stopPropagation(); ir(atual + +p.dataset.passo); if (!bn.matches(':hover')) tocar(); } }, true);
+  bn.addEventListener('keydown', e => { const d = { ArrowLeft: -1, ArrowRight: 1 }[e.key]; if (d) { e.preventDefault(); ir(atual + d); tocar(); } });
+  // computador: arrastar com o mouse e deslizar com dois dedos no trackpad
+  let m0 = null, arrastou = false;
+  const soltar = e => { if (m0 == null) return; const dx = e.clientX - m0; m0 = null; trilho.classList.remove('arrastando'); ir(Math.abs(dx) > 60 ? atual + (dx < 0 ? 1 : -1) : atual); };
+  bn.addEventListener('mousedown', e => { arrastou = false; if (e.button === 0 && e.target.closest('.slide')) m0 = e.clientX; });
+  window.addEventListener('mousemove', e => { if (m0 == null) return; if (!e.buttons) return soltar(e); const dx = e.clientX - m0; if (Math.abs(dx) > 6) { arrastou = true; trilho.classList.add('arrastando'); trilho.style.transform = `translateX(calc(${-atual * 100}% + ${dx}px))`; } });
+  window.addEventListener('mouseup', soltar);
+  bn.addEventListener('click', e => { if (arrastou && e.detail) { arrastou = false; e.stopPropagation(); e.preventDefault(); } }, true);
+  let rolou = 0, travado = false, fimRoda = null;
+  bn.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;      // rolagem para cima/baixo continua normal
+    e.preventDefault(); clearTimeout(fimRoda); fimRoda = setTimeout(() => { rolou = 0; travado = false; }, 160);
+    if (travado) return; rolou += e.deltaX;
+    if (Math.abs(rolou) > 40) { travado = true; ir(atual + (rolou > 0 ? 1 : -1)); }
+  }, { passive: false });
   bn.addEventListener('mouseenter', () => clearInterval(timer)); bn.addEventListener('mouseleave', tocar);
   bn.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; clearInterval(timer); }, { passive: true });
   bn.addEventListener('touchend', e => { if (x0 != null) { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) ir(atual + (dx < 0 ? 1 : -1)); } x0 = null; tocar(); });
